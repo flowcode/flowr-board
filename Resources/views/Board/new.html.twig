@@ -1,0 +1,36 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ '%entity% creation'|trans({'%entity%': 'Board'}, 'Board') }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>{{ 'Board' | trans({}, 'Board')}}</h1>
+    </section>        
+    <section class="content">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">{{ '%entity% creation'|trans({'%entity%': 'Board'}, 'Board') }}</h3>
+            </div>
+            <div class="box-body">
+                {{ form_start(form, {action: path('board_create')}) }}
+                    {{ form_widget(form) }}
+                    <p>
+                        <button class="btn btn-primary" type="submit">{{ 'Create'|trans({}, 'Board') }}</button>
+                    </p>
+                {{ form_end(form) }}
+            </div>
+            <div class="box-footer">
+                        
+        <div class="btn-group record_actions">
+
+
+        </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ form_javascript(form) }}
+{% endblock %}

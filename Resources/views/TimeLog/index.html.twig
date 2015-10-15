@@ -1,0 +1,84 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ '%entity% list'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }} - {{ parent() }}{% endblock %}
+{% macro thead(name, field, label) %}
+    {% spaceless %}
+        {% set sort = app.session.get('sort.' ~ name) %}
+        {% if sort and sort.field == field %}
+            {% if sort.type == 'DESC' %}
+                <a href="{{ path('timelog_sort', {field: field, type: 'ASC'}) }}">{{ label | trans({},'TimeLog')}} <i class="fa fa-sort-down"></i></a>
+            {% elseif sort.type == 'ASC' %}
+                <a href="{{ path('timelog_sort', {field: field, type: 'DESC'}) }}">{{ label | trans({},'TimeLog')}} <i class="fa fa-sort-up"></i></a>
+            {% endif %}
+        {% else %}
+            <a href="{{ path('timelog_sort', {field: field, type: 'ASC'}) }}">{{ label | trans({},'TimeLog')}} <i class="fa fa-sort"></i></a>
+        {% endif %}
+    {% endspaceless %}
+{% endmacro %}
+
+{% from _self import thead %}
+
+
+{% block body %}
+    <section class="content-header">
+        <h1>{{ 'TimeLog' | trans({}, 'TimeLog')}}</h1>
+        <ol class="breadcrumb">
+            <li><a href={{ path('dashboard') }}><i class="fa fa-dashboard"></i> {{"Dashboard" | trans({}, 'TimeLog')}}</a></li>
+            <li class="active" >{{ '%entity% list'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</li>
+        </ol>
+    </section>
+    <section class="content">    
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">{{ '%entity% list'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</h3>
+                <div class="box-tools pull-right">                    <a class="btn btn-default" href={{ path('timelog_new') }}>
+                        <i class="fa fa-plus"></i> {{ 'Create a new %entity%'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}
+                    </a>
+                            </div>
+            </div>
+            <div class="box-body">    
+            <table class="table table-striped table-hover table-bordered records_list">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ thead('timelog', 'id', 'Id') }}</th>
+                        <th scope="col">{{ thead('timelog', 'hours', 'Hours') }}</th>
+                        <th scope="col">{{ thead('timelog', 'description', 'Description') }}</th>
+                        <th scope="col">{{ thead('timelog', 'spentOn', 'Spenton') }}</th>
+                        <th scope="col">{{ thead('timelog', 'createdOn', 'Createdon') }}</th>
+                        <th scope="col">{{ thead('timelog', 'updatedOn', 'Updatedon') }}</th>
+                        <th scope="col">{{ 'Actions'|trans({}, 'TimeLog') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for timelog in paginator %}
+                        <tr>
+                            <td><a href="{{ path('timelog_show', {id: timelog.id}) }}">{{ timelog.id }}</a></td>
+                            <td>{{ timelog.hours }}</td>
+                            <td>{{ timelog.description }}</td>
+                            <td>{% if timelog.spentOn %}{{ timelog.spentOn|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if timelog.createdOn %}{{ timelog.createdOn|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if timelog.updatedOn %}{{ timelog.updatedOn|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm" href="{{ path('timelog_show', {id: timelog.id}) }}">
+                                <i class="fa fa-file-o"></i> {{ 'show'|trans({}, 'TimeLog') }}
+                            </a>
+                            <a class="btn btn-default btn-sm" href="{{ path('timelog_edit', {id: timelog.id}) }}">
+                                <i class="fa fa-edit"></i> {{ 'edit'|trans({}, 'TimeLog') }}
+                            </a>
+                        </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {{ knp_pagination_render(paginator) }}
+            </div>
+        <div class="box-footer">
+
+        </div>
+        
+    </section>        
+
+{% endblock %}

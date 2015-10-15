@@ -1,0 +1,213 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}Task - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>                
+            {% if task.board.account %}
+                <a href="{{ path('account_show', { 'id': task.board.account.id }) }}">{{ task.board.account|title}}</a>  
+            {% endif %}
+            <i class="fa fa-angle-right"></i>
+            <a href="{{ path('board_show', { 'id': task.board.id }) }}">{{ task.board.name|title}}</a>
+        </h1>
+    </section>
+    <section class="content">    
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">#{{task.id}} {{ task.name|capitalize}}</h3>
+                <div class="box-tools pull-right">
+
+                    {{ form_start(delete_form) }}
+                    {{ form_widget(delete_form) }}
+                    <div class="btn-group record_actions">
+                        <a href="{{ path('board_task_list', { 'id' : task.board.id }) }}" class=" btn-sm">
+                            {{ 'board task list'|title}}
+                        </a>
+                        <a  href="{{ path('board_task_kanban', { 'id' : task.board.id }) }}" class=" btn-sm">
+                            {{ 'Kanban view'|trans }}
+                        </a>
+                        <a class=" btn-sm" href="{{ path('task_timelog_new', { 'id' : task.id }) }}">
+                            <i class="fa fa-clock-o"></i> log time
+                        </a>
+                        <a class="  btn-sm" href="{{ path('task_edit', {id: task.id}) }}">
+                            {{ 'Edit'|trans({}, 'Task') }}
+                        </a>
+                        <button class=" btn-link  btn-sm" type="submit">{{ 'Delete'|trans({}, 'Task') }}</button>
+                    </div>
+                    <input name="modal" type="hidden" value="0">
+                    {{ form_end(delete_form) }}
+                    <div id="delete_confirm" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h3>{{ 'Confirm delete'|trans({}, 'Task') }}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}, {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
+                                    <p>{{ 'Do you want to proceed?'|trans({}, 'Task') }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Task') }}</button>
+                                    <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <p>
+                    <span>{{ 'Added by'|trans }}</span>
+                    <a href="">{{ task.creator }}</a>,
+                    updated on {{ task.updated|date('Y-m-d H:i') }}.
+                </p>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2" >{{ 'Assignee'|trans }}</label>
+                            {{ task.assignee }}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">{{'Status'|trans({}, 'Task')}}</label>
+                            {{ task.status|upper }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2">{{'Created'|trans({}, 'Task')}}</label>
+                            {{ task.created|date('Y-m-d H:i') }}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">{{'Duedate'|trans({}, 'Task')}}</label>
+                            {{ task.dueDate|date('Y-m-d H:i') }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-3">{{'Estimated'|trans({}, 'Task')}}(Hrs)</label>
+                            {{ task.estimated + 0}}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">{{'Spent'|trans({}, 'Task')}}(Hrs)</label>
+                            {{ spent }}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>{{'Description'|trans({}, 'Task')}}</label>
+                        {{ task.description|raw }}
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="box box-solid collapsed-box">
+                    <div class="box-header">
+                        <h4 class="box-title">Activity</h4>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <ul class="timeline">
+                            {% for entry in history_entries %}
+                                {% if loop.length > 1 %}
+                                    {% if loop.first %}
+                                        {% set previous_item = history_entries[loop.length - 1] %}
+                                    {% else %}
+                                        {% set previous_item = history_entries[loop.index0 - 1] %}
+                                    {% endif %}
+
+                                    {% if loop.first or (previous_item.changedOn|date('d/m/Y') != entry.changedOn|date('d/m/Y')) %}
+                                        <!-- timeline time label -->
+                                        <li class="time-label">
+                                            <span class="bg-light-blue">
+                                                {{ entry.changedOn|date('d/m/Y') }}
+                                            </span>
+                                        </li>
+                                        <!-- /.timeline-label -->
+                                    {% endif %}
+
+                                {% endif %}
+
+                                <!-- timeline item -->
+                                <li>
+                                    <!-- timeline icon -->
+                                    <i class="fa fa-tag bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-clock-o"></i> {{ entry.changedOn|date('H:i') }}</span>
+                                        <h3 class="timeline-header"><a href="#">{{ entry.user|capitalize }}</a> Change {{ entry.attribute }}</h3>
+                                        <div class="timeline-body">
+                                            Set {{ entry.attribute }} to {{ entry.value }}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="box-footer">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box box-solid collapsed-box">
+                    <div class="box-header">
+                        <h4 class="box-title">Logs</h4>
+                        <div class="box-tools">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <ul class="timeline">
+                            {% for entry in tasklogs %}
+                                {% if loop.length > 1 %}
+                                    {% if loop.first %}
+                                        {% set previous_item = tasklogs[loop.length - 1] %}
+                                    {% else %}
+                                        {% set previous_item = tasklogs[loop.index0 - 1] %}
+                                    {% endif %}
+
+                                    {% if loop.first or (previous_item.spentOn|date('d/m/Y') != entry.spentOn|date('d/m/Y')) %}
+                                        <!-- timeline time label -->
+                                        <li class="time-label">
+                                            <span class="bg-light-blue">
+                                                {{ entry.spentOn|date('d/m/Y') }}
+                                            </span>
+                                        </li>
+                                        <!-- /.timeline-label -->
+                                    {% endif %}
+
+                                {% endif %}
+
+                                <!-- timeline item -->
+                                <li>
+                                    <!-- timeline icon -->
+                                    <i class="fa fa-tag bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-clock-o"></i> {{ entry.spentOn|date('H:i') }}</span>
+                                        <h3 class="timeline-header">{{ entry.user|capitalize }} Spent {{ entry.hours }} Hrs</h3>
+                                        <div class="timeline-body">
+                                            {{ entry.description }}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="box-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}

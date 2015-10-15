@@ -1,0 +1,220 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ '%entity% list'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
+
+{% macro thead(name, field, label) %}
+    {% spaceless %}
+        {% set sort = app.session.get('sort.' ~ name) %}
+        {% if sort and sort.field == field %}
+            {% if sort.type == 'DESC' %}
+                <a href="{{ path('task_sort', {field: field, type: 'ASC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort-down"></i></a>
+                {% elseif sort.type == 'ASC' %}
+                <a href="{{ path('task_sort', {field: field, type: 'DESC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort-up"></i></a>
+                {% endif %}
+            {% else %}
+            <a href="{{ path('task_sort', {field: field, type: 'ASC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort"></i></a>
+            {% endif %}
+        {% endspaceless %}
+    {% endmacro %}
+
+{% from _self import thead %}
+
+
+{% block body %}
+    {% if board.project %}
+        {{ include("FlowerCoreBundle:Project:header.html.twig", { 'project': board.project }) }}
+    {% endif %}
+    <section class="content">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">{{ board.name | capitalize }}</h3>
+                <a class=" btn-sm" href="{{ path('board_edit', {"id": board.id}) }}">
+                {{ 'edit'|trans({}, 'Board') }}
+                </a>
+                <div class="box-tools pull-right">
+                    <a class="btn btn-link btn-sm" href={{ path('task_new', {id: board.id}) }}>
+                        <i class="fa fa-plus"></i> {{ 'Create a new %entity%'|trans({'%entity%': 'Task'}, 'Task') }}
+                    </a>
+                    <a class="btn btn-link btn-sm" href={{ path('board_task_kanban', { 'id' : board.id }) }}>
+                        {{ 'Kanban view'|trans }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <div class="btn-group">
+                    <button type="button" class="btn  btn-sm  btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ "Action"|trans|capitalize }} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu multi-level">
+                        <li class="dropdown-submenu">
+                            <a href="#" >{{ "change status"|trans|capitalize }}</a>
+                            <ul class="dropdown-menu">
+                                {% for status in statuses %}
+                                    <li>
+                                        <a href="#" class="bulk-action" action="{{ path('task_bulk_status',{id:status.id}) }}" data-id="{{status.id}}" >{{ status.name|capitalize }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="#">{{ "assignee to"|trans|capitalize }}</a>
+                            <ul class="dropdown-menu">
+                                {% for user in users %}
+                                    <li>
+                                        <a href="#" class="bulk-action"  action="{{ path('task_bulk_user',{id:user.id}) }}" data-id="{{user.id}}" >{{ user.username|capitalize }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <div class="panel-heading">               
+                        <button type="button" class="btn btn-default btn-sm filter collapsed" data-toggle="collapse" data-target="#filter">Filter <i class="fa fa-filter"></i> </button>
+                    </div>
+                </div>
+                {% set open = "" %}
+                {% if statusFilter |length > 0 and assigneeFilter |length > 0 %}
+                    {% set open = "in" %}
+                {% endif %}
+                <div id="filter" class="collapse {{open}} row">
+                    <form method="get" action="" class=" form-horizontal">
+                        <div id="law_filter" class="col-sm-6" >
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label " for="assigneeFilter">Assignee</label>
+
+                                <div class="col-sm-8">
+                                    {% set multiple = "" %}
+                                    {% set icon = "ion-plus-circled" %}
+                                    {% if assigneeFilter |length > 1 %}
+                                        {% set  multiple = "multiple='true'" %}
+                                        {% set icon = "ion-ios-minus-outline" %}
+                                    {% endif %}
+                                    <select id="assigneeFilter" name="assigneeFilter[]" {{multiple}} class="form-control">
+                                        <option value=""></option>
+                                        {% for user in users %}
+                                            {% set  selected = "" %}
+                                            {% if user.id in assigneeFilter %}
+                                                {% set  selected = "selected" %}
+                                            {% endif %}
+                                            <option value="{{user.id}}" {{selected}}>{{user.username}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-1">
+                                    <span class="cursor-pointer text-left  ionicons {{icon}}" style="margin-top: 8px;" onclick="toogleSelect(assigneeFilter,this)"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="statusFilter">Status</label>
+
+                                <div class="col-sm-8" class="input-group">
+                                    {% set multiple = "" %}
+                                    {% set icon = "ion-plus-circled" %}
+                                    {% if statusFilter |length > 1 %}
+                                        {% set  multiple = "multiple='true'" %}
+                                        {% set icon = "ion-ios-minus-outline" %}
+                                    {% endif %}
+                                    <select id="statusFilter" name="statusFilter[]" {{multiple}} class="form-control">
+                                        <option value=""></option>
+                                        {% for status in statuses %}
+                                            {% set  selected = "" %}
+                                            {% if status.id in statusFilter %}
+                                                {% set  selected = "selected" %}
+                                            {% endif %}
+                                            <option value="{{status.id}}" {{selected}}>{{status.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <i class="cursor-pointer ionicons text-left {{icon}}" style="margin-top: 8px;"  onclick="toogleSelect(statusFilter,this)"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class=" col-sm-9">
+                                    <a class="btn btn-default btn-sm" href="{{ path('board_task_list', {id: board.id}) }}"><i class="fa fa-times"></i> {{'clean' | trans | capitalize}}</a>
+                                    <button class="btn btn-primary btn-sm" type="submit">{{'apply' | trans | capitalize}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <table class="table table-striped table-hover records_list">
+                    <thead>
+                        <tr>
+                            <th scope="col"><input type="checkbox"  onclick="selectAll(this)" class="" ></th>
+                            <th scope="col">{{ thead('task', 'id', 'Id') }}</th>
+                            <th scope="col">{{ thead('task', 'name', 'Name') }}</th>
+                            <th scope="col">{{ 'status' }}</th>
+                            <th scope="col">{{ 'assignee' }}</th>
+                            <th scope="col">{{ thead('task', 'updated', 'Updated') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in paginator %}
+                            <tr class="bulk">
+                                <td><input type="checkbox" value="{{task.id}}" name="tasks[]" class="bulk-check" ></td>
+                                <td><a href="{{ path('task_show', {id: task.id}) }}">{{ task.id }}</a></td>
+                                <td>
+                                    <a href="{{ path('task_show', {id: task.id}) }}">
+                                    {{ task.name }}
+                                    </a>
+                                </td>
+                                <td>{{ task.status }}</td>
+                                <td>{{ task.assignee }}</td>
+                                <td title="{% if task.updated %}{{ task.updated|date('Y-m-d H:i') }}{% endif %}">{% if task.updated %}{{ task.updated|date('H:i d/m ') }}{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {{ knp_pagination_render(paginator) }}
+            </div>
+            <div class="box-footer">
+
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function selectAll(parent){
+            $(".bulk input.bulk-check").attr("checked",parent.checked);
+        }
+        function toogleSelect (element, me) {
+            var multiple = $(element).attr("multiple");
+            if(multiple === undefined){
+                $(element).attr("multiple",true);
+                $(me).addClass("ion-ios-minus-outline")
+                $(me).removeClass("ion-plus-circled")
+            }else{
+                $(element).removeAttr("multiple");
+                $(me).removeClass("ion-ios-minus-outline")
+                $(me).addClass("ion-plus-circled")
+            }
+        }
+        $(".bulk-action").click(function () {
+            var action = $(this).attr("action");
+            var taskIds = [];
+            $(".bulk input.bulk-check:checked").each(function () {
+                taskIds.push($(this).val());
+            });
+
+            $.ajax({
+                "url": action,
+                "type": "GET",
+                "data": {"tasks": taskIds},
+                "success": function () {
+                    location.reload();
+                }
+            });
+
+        });
+    </script>
+{% endblock%}

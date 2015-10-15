@@ -1,0 +1,21 @@
+<section class="content-header">
+    <h1>
+        {% if board.account %}
+	            <a href="{{ path('account_show', { 'id': board.account.id }) }}">{{ board.account|capitalize }}</a>
+        {% endif %}
+        {% if board.opportunity %}
+	        {% if board.opportunity.account and not board.account %}
+	            <a href="{{ path('account_show', { 'id': board.opportunity.account.id }) }}">{{ board.opportunity.account|capitalize }}</a>
+	        {% endif %}
+	        <i class="fa fa-angle-right"></i>
+	        <a href="{{ path('opportunity_show', { 'id': board.opportunity.id }) }}">{{ board.opportunity.name|capitalize }}</a>
+        {% endif %}
+    	{% if board.project %}
+	        {% if board.project.account and not board.account and not board.opportunity%}
+	            <a href="{{ path('account_show', { 'id': board.project.account.id }) }}">{{ board.project.account|capitalize }}</a>
+	        {% endif %}
+	        <i class="fa fa-angle-right"></i>
+	        <a href="{{ path('project_show', { 'id': board.project.id }) }}">{{ board.project|capitalize }}</a>
+        {% endif %}
+    </h1>
+</section>

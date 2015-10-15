@@ -1,0 +1,35 @@
+{
+    "name" : "flowcode/boardbundle",
+    "description" : "board bundle",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "Francisco Memoli",
+        "email" : "fmemoli@flowcode.com.ar"
+    },
+    {
+        "name" : "Juan Manuel Agüero",
+        "email" : "jaguero@flowcode.com.ar"
+    }],
+    "keywords" : [
+        "board bundle"
+    ],
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+        "friendsofsymfony/user-bundle": "~2.0@dev"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Flowcode\\BoardBundle" : ""
+        }
+    },
+    "target-dir" : "Flowcode/BoardBundle",
+    "repositories" : [{
+    }],
+    "extra" : {
+    "branch-alias" : {
+            "dev-master" : "1.0.0-dev"
+        }
+    }
+}
