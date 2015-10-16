@@ -21,10 +21,10 @@
     },
     "autoload" : {
         "psr-0" : {
-            "Flowcode\\BoardBundle" : ""
+            "Flower\\BoardBundle" : ""
         }
     },
-    "target-dir" : "Flowcode/BoardBundle",
+    "target-dir" : "Flower/BoardBundle",
     "repositories" : [{
     }],
     "extra" : {
