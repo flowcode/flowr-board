@@ -1,5 +1,5 @@
 {
-    "name" : "flowcode/boardbundle",
+    "name" : "flower/boardbundle",
     "description" : "board bundle",
     "type" : "symfony-bundle",
     "authors" : [{
