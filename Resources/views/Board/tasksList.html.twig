@@ -21,8 +21,8 @@
 
 
 {% block body %}
-    {% if board.project %}
-        {{ include("FlowerCoreBundle:Project:header.html.twig", { 'project': board.project }) }}
+    {% if project %}
+        {{ include("FlowerProjectBundle:Project:header.html.twig", { 'project': project }) }}
     {% endif %}
     <section class="content">
         <div class="box">

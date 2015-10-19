@@ -5,8 +5,8 @@
 {% block body %}
     <section class="content-header">
         <h1>                
-            {% if task.board.account %}
-                <a href="{{ path('account_show', { 'id': task.board.account.id }) }}">{{ task.board.account|title}}</a>  
+            {% if account %}
+                <a href="{{ path('account_show', { 'id': account.id }) }}">{{ account|title}}</a>  
             {% endif %}
             <i class="fa fa-angle-right"></i>
             <a href="{{ path('board_show', { 'id': task.board.id }) }}">{{ task.board.name|title}}</a>

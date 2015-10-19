@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\BoardBundle\Model;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,10 +12,8 @@ use Flower\ModelBundle\Entity\User\User;
 /**
  * History
  *
- * @ORM\Table(name="history")
- * @ORM\Entity(repositoryClass="Flower\ModelBundle\Repository\HistoryRepository")
  */
-class History
+abstract class History
 {
 
     const TYPE_TASK = "task";
@@ -27,48 +25,48 @@ class History
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
      */
-    private $type;
+    protected $type;
 
     /**
      * @var string
      *
      * @ORM\Column(name="enitity_id", type="string", length=255)
      */
-    private $enitity_id;
+    protected $enitity_id;
     
     /**
      * @var string
      *
      * @ORM\Column(name="attribute", type="string", length=255)
      */
-    private $attribute;
+    protected $attribute;
 
     /**
      * @var string
      *
      * @ORM\Column(name="value_old", type="string", length=255, nullable=true)
      */
-    private $oldValue;
+    protected $oldValue;
 
     /**
      * @var string
      *
      * @ORM\Column(name="value", type="string", length=255)
      */
-    private $value;
+    protected $value;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
      * */
-    private $user;
+    protected $user;
 
     /**
      * @var DateTime
@@ -76,8 +74,11 @@ class History
      * @ORM\Column(name="changedOn", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $changedOn;
-
+    protected $changedOn;
+    
+    public function __construct()
+    {
+    }
     /**
      * Get id
      *

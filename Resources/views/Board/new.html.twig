@@ -12,7 +12,7 @@
                 <h3 class="box-title">{{ '%entity% creation'|trans({'%entity%': 'Board'}, 'Board') }}</h3>
             </div>
             <div class="box-body">
-                {{ form_start(form, {action: path('board_create')}) }}
+                {{ form_start(form) }}
                     {{ form_widget(form) }}
                     <p>
                         <button class="btn btn-primary" type="submit">{{ 'Create'|trans({}, 'Board') }}</button>

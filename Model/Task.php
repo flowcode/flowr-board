@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\BoardBundle\Model;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,13 +11,8 @@ use JMS\Serializer\Annotation\Groups;
 
 /**
  * Task
- *
- * @ORM\Table(name="task")
- * @ORM\EntityListeners({ "Flower\ModelBundle\Listener\TaskListener" })
- * @ORM\Entity(repositoryClass="Flower\ModelBundle\Repository\TaskRepository")
  */
-class Task
-{
+abstract class Task {
 
     /**
      * @var integer
@@ -27,7 +22,7 @@ class Task
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"kanban","search"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -35,21 +30,21 @@ class Task
      * @ORM\Column(name="name", type="string", length=255)
      * @Groups({"kanban","search"})
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
      */
-    private $type;
+    protected $type;
 
     /**
      * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer")
      * @Groups({"kanban","search"})
      */
-    private $position;
+    protected $position;
 
     /**
      * @var string
@@ -57,68 +52,68 @@ class Task
      * @ORM\Column(name="description", type="text", nullable=true)
      * @Groups({"kanban","search"})
      */
-    private $description;
+    protected $description;
 
     /**
      * @var float
      *
      * @ORM\Column(name="estimated_hours", type="float", nullable=true)
      */
-    private $estimated;
+    protected $estimated;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
      * */
-    private $creator;
+    protected $creator;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
      * @Groups({"kanban","search"})
      * */
-    private $assignee;
+    protected $assignee;
 
     /**
-     * @ManyToOne(targetEntity="Board", inversedBy="tasks")
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\Board", inversedBy="tasks")
      * @JoinColumn(name="board_id", referencedColumnName="id")
      * */
-    private $board;
+    protected $board;
 
     /**
      * @Gedmo\SortableGroup
-     * @ManyToOne(targetEntity="TaskStatus")
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\TaskStatus")
      * @JoinColumn(name="status_id", referencedColumnName="id")
      * @Groups({"kanban","search"})
      * */
-    private $status;
+    protected $status;
 
     /**
      * @ManyToOne(targetEntity="Tracker")
      * @JoinColumn(name="tracker_id", referencedColumnName="id")
      * */
-    private $tracker;
+    protected $tracker;
 
     /**
      * @var DateTime
      *
      * @ORM\Column(name="startDate", type="datetime", nullable=true)
      */
-    private $startDate;
+    protected $startDate;
     
     /**
      * @var DateTime
      *
      * @ORM\Column(name="dueDate", type="datetime", nullable=true)
      */
-    private $dueDate;
+    protected $dueDate;
 
     /**
      * @var DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created", type="datetime")
      */
-    private $created;
+    protected $created;
 
     /**
      * @var DateTime
@@ -126,8 +121,11 @@ class Task
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated", type="datetime")
      */
-    private $updated;
-
+    protected $updated;
+    
+    public function __construct()
+    {
+    }
     /**
      * Get id
      *
@@ -256,10 +254,10 @@ class Task
     /**
      * Set board
      *
-     * @param Board $board
+     * @param \Flower\ModelBundle\Entity\Board\Board $board
      * @return Task
      */
-    public function setBoard(Board $board = null)
+    public function setBoard(\Flower\ModelBundle\Entity\Board\Board $board = null)
     {
         $this->board = $board;
 
@@ -269,7 +267,7 @@ class Task
     /**
      * Get board
      *
-     * @return Board 
+     * @return \Flower\ModelBundle\Entity\Board\Board 
      */
     public function getBoard()
     {
@@ -279,10 +277,10 @@ class Task
     /**
      * Set status
      *
-     * @param TaskStatus $status
+     * @param \Flower\ModelBundle\Entity\Board\TaskStatus $status
      * @return Task
      */
-    public function setStatus(TaskStatus $status = null)
+    public function setStatus(\Flower\ModelBundle\Entity\Board\TaskStatus $status = null)
     {
         $this->status = $status;
 
@@ -292,7 +290,7 @@ class Task
     /**
      * Get status
      *
-     * @return TaskStatus 
+     * @return \Flower\ModelBundle\Entity\Board\TaskStatus 
      */
     public function getStatus()
     {
@@ -302,10 +300,10 @@ class Task
     /**
      * Set tracker
      *
-     * @param Tracker $tracker
+     * @param \Flower\ModelBundle\Entity\Board\Tracker $tracker
      * @return Task
      */
-    public function setTracker(Tracker $tracker = null)
+    public function setTracker(\Flower\ModelBundle\Entity\Board\Tracker $tracker = null)
     {
         $this->tracker = $tracker;
 
@@ -315,7 +313,7 @@ class Task
     /**
      * Get tracker
      *
-     * @return Tracker 
+     * @return \Flower\ModelBundle\Entity\Board\Tracker 
      */
     public function getTracker()
     {

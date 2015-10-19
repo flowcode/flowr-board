@@ -19,7 +19,6 @@
                 <thead>
                     <tr>
                         <th scope="col" >Name</th>
-                        <th scope="col"></th>
                         <th scope="col">Status</th>
                         <th scope="col">Due date</th>
                     </tr>
@@ -28,17 +27,7 @@
                     {% for board in paginator %}
                         <tr>
                             <td ><a title="{{ board.description }}" class="" href="{{ path('board_task_kanban', {"id": board.id}) }}">{{ board.name | capitalize }}</a></td>
-                            <td> 
-                                {% if board.project %}
-                                    {{board.project}} 
-                                {% endif %}
-                                {% if board.account %}
-                                    {{board.account}} 
-                                {% endif %}
-                                {% if board.opportunity %}
-                                    {{board.opportunity}} 
-                                {% endif %}
-                            </td>
+
                             {% if board.status == 1 %}
                             <td>{{'open' | trans | capitalize}}</td>
                             {% else %}

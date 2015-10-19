@@ -1,17 +1,13 @@
 <?php
 
-namespace Flower\CoreBundle\Controller;
+namespace Flower\BoardBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Flower\ModelBundle\Entity\Board;
-use Flower\ModelBundle\Entity\Opportunity;
-use Flower\ModelBundle\Entity\Account;
-use Flower\ModelBundle\Entity\Project;
-use Flower\ModelBundle\Entity\Task;
+use Flower\ModelBundle\Entity\Board\Board;
 use Flower\CoreBundle\Form\Type\BoardType;
 use Doctrine\ORM\QueryBuilder;
 /**
@@ -31,7 +27,7 @@ class BoardController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:Board')->createQueryBuilder('b');
+        $qb = $em->getRepository('FlowerModelBundle:Board\Board')->createQueryBuilder('b');
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
         return array(
             'paginator' => $paginator,
@@ -67,8 +63,8 @@ class BoardController extends Controller
     public function tasksKanbanAction(Board $board)
     {
         $em = $this->getDoctrine()->getManager();
-        $projStatuses = $em->getRepository('FlowerModelBundle:TaskStatus')->getKanbanStatuses();
-        $taskRepo = $em->getRepository("FlowerModelBundle:Task");
+        $projStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
+        $taskRepo = $em->getRepository("FlowerModelBundle:Board\Task");
 
         $tasks = array();
 
@@ -96,7 +92,7 @@ class BoardController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:Task')->createQueryBuilder('t');
+        $qb = $em->getRepository('FlowerModelBundle:Board\Task')->createQueryBuilder('t');
         $qb->where("t.board = :board")->setParameter("board", $board->getId());
 
         $this->addQueryBuilderSort($qb, 'task');
@@ -113,21 +109,20 @@ class BoardController extends Controller
             }
         }
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
-        $statuses = $em->getRepository('FlowerModelBundle:TaskStatus')->findAll();
-        $users = $em->getRepository('FlowerModelBundle:User')->findAll();
+        $statuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->findAll();
+        $users = $em->getRepository('FlowerModelBundle:User\User')->findAll();
+        $project = $em->getRepository('FlowerModelBundle:Project\Project')->findByBoard($board);
         return array(
             'assigneeFilter' => $assigneeFilter,
             'statusFilter' => $statusFilter,
             'users' => $users,
             'statuses' => $statuses,
             'board' => $board,
+            'project' => $project,
             'paginator' => $paginator,
         );
     }
 
-    /**
-     * BOARDS CREATION
-     */
     /**
      * Displays a form to create a new Board entity.
      *
@@ -138,7 +133,10 @@ class BoardController extends Controller
     public function newAction()
     {
         $board = new Board();
-        $form = $this->createForm(new BoardType(), $board);
+        $form = $this->createForm($this->get("form.type.board"), $board, array(
+            'action' => $this->generateUrl('board_create'),
+            'method' => 'POST',
+        ));
 
         return array(
             'board' => $board,
@@ -146,76 +144,22 @@ class BoardController extends Controller
         );
     }
 
-    /**
-     * Displays a form to create a new Board entity.
-     *
-     * @Route("/account/{id}/new", name="board_new_to_account")
-     * @Method("GET")
-     * @Template("FlowerCoreBundle:Board:new.html.twig")
-     */
-    public function newToAccountAction(Account $account)
-    {
-        $board = new Board();
-        $board->setAccount($account);
-        $form = $this->createForm(new BoardType(), $board);
-        //$form = $this->createForm($this->get('form.type.board'), $board);
 
-        return array(
-            'board' => $board,
-            'form' => $form->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to create a new Board entity.
-     *
-     * @Route("/project/{id}/new", name="board_new_to_project")
-     * @Method("GET")
-     * @Template("FlowerCoreBundle:Board:new.html.twig")
-     */
-    public function newToProjectAction(Project $project)
-    {
-        $board = new Board();
-        $board->setProject($project);
-        $board->setAccount($project->getAccount());
-        $form = $this->createForm(new BoardType(), $board);
-
-        return array(
-            'board' => $board,
-            'form' => $form->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to create a new Board entity.
-     *
-     * @Route("/opportunity/{id}/new", name="board_new_to_opportunity")
-     * @Method("GET")
-     * @Template("FlowerCoreBundle:Board:new.html.twig")
-     */
-    public function newToOpportunityAction(Opportunity $opportunity)
-    {
-        $board = new Board();
-        $board->setOpportunity($opportunity);
-        $form = $this->createForm(new BoardType(), $board);
-
-        return array(
-            'board' => $board,
-            'form' => $form->createView(),
-        );
-    }
 
     /**
      * Creates a new Board entity.
      *
      * @Route("/create", name="board_create")
      * @Method("POST")
-     * @Template("FlowerCoreBundle:Board:new.html.twig")
+     * @Template("FlowerBoardBundle:Board:new.html.twig")
      */
     public function createAction(Request $request)
     {
         $board = new Board();
-        $form = $this->createForm(new BoardType(), $board);
+        $form = $this->createForm($this->get("form.type.board"), $board, array(
+            'action' => $this->generateUrl('board_create'),
+            'method' => 'POST',
+        ));
         if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($board);
@@ -239,7 +183,7 @@ class BoardController extends Controller
      */
     public function editAction(Board $board)
     {
-        $editForm = $this->createForm(new BoardType(), $board, array(
+        $editForm = $this->createForm($this->get("form.type.board"), $board, array(
             'action' => $this->generateUrl('board_update', array('id' => $board->getid())),
             'method' => 'PUT',
         ));
@@ -257,11 +201,11 @@ class BoardController extends Controller
      *
      * @Route("/{id}/update", name="board_update", requirements={"id"="\d+"})
      * @Method("PUT")
-     * @Template("FlowerCoreBundle:Board:edit.html.twig")
+     * @Template("FlowerBoardBundle:Board:edit.html.twig")
      */
     public function updateAction(Board $board, Request $request)
     {
-        $editForm = $this->createForm(new BoardType(), $board, array(
+        $editForm = $this->createForm($this->get("form.type.board"), $board, array(
             'action' => $this->generateUrl('board_update', array('id' => $board->getid())),
             'method' => 'PUT',
         ));

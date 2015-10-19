@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\BoardBundle\Model;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,10 +12,8 @@ use Flower\ModelBundle\Entity\User\User;
 /**
  * TimeLog
  *
- * @ORM\Table(name="time_log")
- * @ORM\Entity(repositoryClass="Flower\ModelBundle\Repository\TimeLogRepository")
  */
-class TimeLog
+abstract  class TimeLog
 {
 
     /**
@@ -25,40 +23,40 @@ class TimeLog
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var float
      *
      * @ORM\Column(name="hours", type="float")
      */
-    private $hours;
+    protected $hours;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text")
      */
-    private $description;
+    protected $description;
 
     /**
      * @ManyToOne(targetEntity="Task")
      * @JoinColumn(name="task_id", referencedColumnName="id")
      * */
-    private $task;
+    protected $task;
     
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
      * */
-    private $user;
+    protected $user;
 
     /**
      * @var DateTime
      *
      * @ORM\Column(name="spent_on", type="datetime")
      */
-    private $spentOn;
+    protected $spentOn;
 
     /**
      * @var DateTime
@@ -66,7 +64,7 @@ class TimeLog
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created_on", type="datetime")
      */
-    private $createdOn;
+    protected $createdOn;
 
     /**
      * @var DateTime
@@ -74,7 +72,7 @@ class TimeLog
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated_on", type="datetime")
      */
-    private $updatedOn;
+    protected $updatedOn;
     
     function __construct()
     {
@@ -209,10 +207,10 @@ class TimeLog
     /**
      * Set task
      *
-     * @param \Flower\ModelBundle\Entity\Task $task
+     * @param \Flower\ModelBundle\Entity\Board\Task $task
      * @return TimeLog
      */
-    public function setTask(\Flower\ModelBundle\Entity\Task $task = null)
+    public function setTask(\Flower\ModelBundle\Entity\Board\Task $task = null)
     {
         $this->task = $task;
 
@@ -222,7 +220,7 @@ class TimeLog
     /**
      * Get task
      *
-     * @return \Flower\ModelBundle\Entity\Task 
+     * @return \Flower\ModelBundle\Entity\Board\Task 
      */
     public function getTask()
     {

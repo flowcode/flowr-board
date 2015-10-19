@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\BoardBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -8,10 +8,8 @@ use JMS\Serializer\Annotation\Groups;
 /**
  * TaskStatus
  *
- * @ORM\Table(name="task_status")
- * @ORM\Entity(repositoryClass="Flower\ModelBundle\Repository\TaskStatusRepository")
  */
-class TaskStatus
+abstract  class TaskStatus
 {
 
     const STATUS_BACKLOG = "backlog";
@@ -28,7 +26,7 @@ class TaskStatus
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"kanban"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -36,14 +34,14 @@ class TaskStatus
      * @ORM\Column(name="name", type="string", length=255)
      * @Groups({"kanban"})
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
-    private $description;
+    protected $description;
 
     /**
      * Get id

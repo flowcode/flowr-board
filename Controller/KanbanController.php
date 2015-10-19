@@ -1,13 +1,13 @@
 <?php
 
-namespace Flower\CoreBundle\Controller;
+namespace Flower\BoardBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
 use Flower\CoreBundle\Form\Type\TaskType;
 use Flower\CoreBundle\Form\Type\TimeLogType;
-use Flower\ModelBundle\Entity\Task;
-use Flower\ModelBundle\Entity\TaskType as TaskType2;
-use Flower\ModelBundle\Entity\TimeLog;
+use Flower\ModelBundle\Entity\Board\Task;
+use Flower\ModelBundle\Entity\Board\TaskType as TaskType2;
+use Flower\ModelBundle\Entity\Board\TimeLog;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View as FOSView;
@@ -35,8 +35,8 @@ class KanbanController extends FOSRestController
     public function tasksAction(Request $request, $board_id)
     {
         $em = $this->getDoctrine()->getManager();
-        $boardStatuses = $em->getRepository('FlowerModelBundle:TaskStatus')->getKanbanStatuses();
-        $taskRepo = $em->getRepository("FlowerModelBundle:Task");
+        $boardStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
+        $taskRepo = $em->getRepository("FlowerModelBundle:Board\Task");
 
         $tasks = array();
 
@@ -64,7 +64,7 @@ class KanbanController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
 
         $taskStatusName = $request->get('status');
-        $taskStatus = $em->getRepository("FlowerModelBundle:TaskStatus")->findOneBy(array("name" => $taskStatusName));
+        $taskStatus = $em->getRepository("FlowerModelBundle:Board\TaskStatus")->findOneBy(array("name" => $taskStatusName));
         $newPosition = $request->get('pos', 0);
 
         $task->setPosition($newPosition);
@@ -108,9 +108,9 @@ class KanbanController extends FOSRestController
         $statusArr = $request->get("status");
 
 
-        $status = $em->getRepository("FlowerModelBundle:TaskStatus")->find($statusArr['id']);
-        $board = $em->getRepository("FlowerModelBundle:Board")->find($request->get("board_id"));
-        $devTracker = $em->getRepository("FlowerModelBundle:Tracker")->findOneBy(array('name' => 'development'));
+        $status = $em->getRepository("FlowerModelBundle:Board\TaskStatus")->find($statusArr['id']);
+        $board = $em->getRepository("FlowerModelBundle:Board\Board")->find($request->get("board_id"));
+        $devTracker = $em->getRepository("FlowerModelBundle:Board\Tracker")->findOneBy(array('name' => 'development'));
 
         $task->setBoard($board);
         $task->setStatus($status);

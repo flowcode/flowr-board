@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\BoardBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -12,10 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Board
  *
- * @ORM\Table(name="board")
- * @ORM\Entity(repositoryClass="Flower\ModelBundle\Repository\BoardRepository")
  */
-class Board
+abstract  class Board
 {
     /**
      * @var integer
@@ -24,54 +22,48 @@ class Board
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
-    private $description;
+    protected $description;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="status", type="integer")
      */
-    private $status;
-
-    /**
-     * @ManyToOne(targetEntity="Project", inversedBy="boards")
-     * @JoinColumn(name="project_id", referencedColumnName="id", nullable=true)
-     * */
-    private $project;
+    protected $status;
 
 
     /**
-     * @OneToMany(targetEntity="Task", mappedBy="board")
+     * @OneToMany(targetEntity="Flower\ModelBundle\Entity\Board\Task", mappedBy="board")
      * */
-    private $tasks;    
+    protected $tasks;    
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="startDate", type="datetime", nullable=true))
      */
-    private $startDate;
+    protected $startDate;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="dueDate", type="datetime", nullable=true))
      */
-    private $dueDate;
+    protected $dueDate;
 
     /**
      * @var \DateTime
@@ -79,7 +71,7 @@ class Board
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created", type="datetime")
      */
-    private $created;
+    protected $created;
 
     /**
      * @var \DateTime
@@ -87,7 +79,7 @@ class Board
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated", type="datetime")
      */
-    private $updated;
+    protected $updated;
 
 
     /**
@@ -269,81 +261,12 @@ class Board
     }
 
     /**
-     * Set project
-     *
-     * @param \Flower\ModelBundle\Entity\Project $project
-     * @return Board
-     */
-    public function setProject(\Flower\ModelBundle\Entity\Project $project = null)
-    {
-        $this->project = $project;
-
-        return $this;
-    }
-
-    /**
-     * Get project
-     *
-     * @return \Flower\ModelBundle\Entity\Project 
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
-     * Set account
-     *
-     * @param \Flower\ModelBundle\Entity\Clients\Account $account
-     * @return Board
-     */
-    public function setAccount(\Flower\ModelBundle\Entity\Clients\Account $account = null)
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    /**
-     * Get account
-     *
-     * @return \Flower\ModelBundle\Entity\Clients\Account 
-     */
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
-    /**
-     * Set opportunity
-     *
-     * @param \Flower\ModelBundle\Entity\Clients\Opportunity $opportunity
-     * @return Board
-     */
-    public function setOpportunity(\Flower\ModelBundle\Entity\Clients\Opportunity $opportunity = null)
-    {
-        $this->opportunity = $opportunity;
-
-        return $this;
-    }
-
-    /**
-     * Get opportunity
-     *
-     * @return \Flower\ModelBundle\Entity\Clients\Opportunity 
-     */
-    public function getOpportunity()
-    {
-        return $this->opportunity;
-    }
-
-    /**
      * Add tasks
      *
-     * @param \Flower\ModelBundle\Entity\Task $tasks
+     * @param \Flower\ModelBundle\Entity\Board\Task $tasks
      * @return Board
      */
-    public function addTask(\Flower\ModelBundle\Entity\Task $tasks)
+    public function addTask(\Flower\ModelBundle\Entity\Board\Task $tasks)
     {
         $this->tasks[] = $tasks;
 
@@ -353,9 +276,9 @@ class Board
     /**
      * Remove tasks
      *
-     * @param \Flower\ModelBundle\Entity\Task $tasks
+     * @param \Flower\ModelBundle\Entity\Board\Task $tasks
      */
-    public function removeTask(\Flower\ModelBundle\Entity\Task $tasks)
+    public function removeTask(\Flower\ModelBundle\Entity\Board\Task $tasks)
     {
         $this->tasks->removeElement($tasks);
     }

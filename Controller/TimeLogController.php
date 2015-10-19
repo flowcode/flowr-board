@@ -1,11 +1,11 @@
 <?php
 
-namespace Flower\CoreBundle\Controller;
+namespace Flower\BoardBundle\Controller;
 
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
-use Flower\CoreBundle\Form\Type\TimeLogType;
-use Flower\ModelBundle\Entity\TimeLog;
+use Flower\BoardBundle\Form\Type\TimeLogType;
+use Flower\ModelBundle\Entity\Board\TimeLog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +32,7 @@ class TimeLogController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:TimeLog')->createQueryBuilder('t');
+        $qb = $em->getRepository('FlowerModelBundle:Board\TimeLog')->createQueryBuilder('t');
         $this->addQueryBuilderSort($qb, 'timelog');
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
 
@@ -91,7 +91,7 @@ class TimeLogController extends Controller
         $description = $request->get("description");
 
 
-        $task = $em->getRepository("FlowerModelBundle:Task")->find($taskArr['id']);
+        $task = $em->getRepository("FlowerModelBundle:Board\Task")->find($taskArr['id']);
         if ($task && $hours && $description) {
             $timelog = new TimeLog();
             $timelog->setHours($hours);

@@ -1,13 +1,13 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\BoardBundle\Model;
 
 /**
  * Description of TaskType
  *
  * @author Juan Manuel Agüero <jaguero@flowcode.com.ar>
  */
-class TaskType
+abstract  class TaskType
 {
 
     const TYPE_BUG = "bug";

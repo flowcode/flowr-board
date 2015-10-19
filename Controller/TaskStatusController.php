@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\CoreBundle\Controller;
+namespace Flower\BoardBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
 use Flower\CoreBundle\Form\Type\TaskStatusType;
@@ -30,7 +30,7 @@ class TaskStatusController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:TaskStatus')->createQueryBuilder('t');
+        $qb = $em->getRepository('FlowerModelBundle:Board/TaskStatus')->createQueryBuilder('t');
         $this->addQueryBuilderSort($qb, 'taskstatus');
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
 

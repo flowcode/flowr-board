@@ -1,16 +1,19 @@
 <?php
 
-namespace Flower\CoreBundle\Controller;
+namespace Flower\BoardBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
-use Flower\CoreBundle\Form\Type\TaskType;
-use Flower\CoreBundle\Form\Type\TimeLogType;
-use Flower\ModelBundle\Entity\Account;
-use Flower\ModelBundle\Entity\Board;
-use Flower\ModelBundle\Entity\Project;
-use Flower\ModelBundle\Entity\Task;
-use Flower\ModelBundle\Entity\TaskType as TaskType2;
-use Flower\ModelBundle\Entity\TimeLog;
+use Flower\BoardBundle\Form\Type\TaskType;
+use Flower\BoardBundle\Form\Type\TimeLogType;
+use Flower\ModelBundle\Entity\Clients\Account;
+use Flower\ModelBundle\Entity\Board\Board;
+use Flower\ModelBundle\Entity\Project\Project;
+use Flower\ModelBundle\Entity\Board\Task;
+use Flower\ModelBundle\Entity\User\User;
+use Flower\ModelBundle\Entity\Board\TaskStatus;
+use Flower\ModelBundle\Entity\Board\History;
+use Flower\ModelBundle\Entity\Board\TaskType as TaskType2;
+use Flower\ModelBundle\Entity\Board\TimeLog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -37,8 +40,8 @@ class TaskController extends Controller
     public function kanbanAction(Board $board, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $taskStatuses = $em->getRepository('FlowerModelBundle:TaskStatus')->getKanbanStatuses();
-        $taskRepo = $em->getRepository("FlowerModelBundle:Task");
+        $taskStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
+        $taskRepo = $em->getRepository("FlowerModelBundle:Board\Task");
 
         $tasks = array();
 
@@ -65,7 +68,7 @@ class TaskController extends Controller
     public function indexAction(Board $board, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:Task')->createQueryBuilder('t');
+        $qb = $em->getRepository('FlowerModelBundle:Board\Task')->createQueryBuilder('t');
         $this->addQueryBuilderSort($qb, 'task');
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
 
@@ -86,12 +89,14 @@ class TaskController extends Controller
     {
         $deleteForm = $this->createDeleteForm($task->getId(), 'task_delete');
 
-        $historyEntries = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:History")->findBy(array("enitity_id" => $task->getId(), "type" => \Flower\ModelBundle\Entity\History::TYPE_TASK));
-        $tasklogs = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
-        $spent = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:TimeLog")->getSpentByTask($task);
+        $historyEntries = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\History")->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
+        $tasklogs = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
+        $spent = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
+        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
         return array(
             'spent' => $spent,
             'task' => $task,
+            'account' => $account,
             'tasklogs' => $tasklogs,
             'history_entries' => $historyEntries,
             'delete_form' => $deleteForm->createView(),
@@ -123,7 +128,7 @@ class TaskController extends Controller
      *
      * @Route("/account/{id}/new", name="task_new_to_account")
      * @Method("GET")
-     * @Template("FlowerCoreBundle:Task:new.html.twig")
+     * @Template("FlowerBoardBundle:Task:new.html.twig")
      */
     public function newToAccountAction(Account $account)
     {
@@ -144,7 +149,7 @@ class TaskController extends Controller
      *
      * @Route("/account/{id}/bug/new", name="task_new_bug_to_account")
      * @Method("GET")
-     * @Template("FlowerCoreBundle:Task:new.html.twig")
+     * @Template("FlowerBoardBundle:Task:new.html.twig")
      */
     public function newBugToAccountAction(Account $account)
     {
@@ -165,7 +170,7 @@ class TaskController extends Controller
      *
      * @Route("/project/{id}/new", name="task_new_to_project")
      * @Method("GET")
-     * @Template("FlowerCoreBundle:Task:new.html.twig")
+     * @Template("FlowerBoardBundle:Task:new.html.twig")
      */
     public function newToProjectAction(Project $project)
     {
@@ -190,7 +195,7 @@ class TaskController extends Controller
      *
      * @Route("/project/{id}/bug/new", name="task_new_bug_to_project")
      * @Method("GET")
-     * @Template("FlowerCoreBundle:Task:new.html.twig")
+     * @Template("FlowerBoardBundle:Task:new.html.twig")
      */
     public function newBugToProjectAction(Project $project)
     {
@@ -220,7 +225,7 @@ class TaskController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         foreach ($tasks as $taskId) {
-            $task = $em->getRepository('FlowerModelBundle:Task')->find($taskId);
+            $task = $em->getRepository('FlowerModelBundle:Board\Task')->find($taskId);
             $task->setAssignee($user);
             $em->flush();
         }
@@ -230,9 +235,9 @@ class TaskController extends Controller
     /**
      * Creates a new Task entity.
      *
-     * @Route("/board/{id}/tasks/create", name="board_task_create")
+     * @Route("/board\{id}/tasks/create", name="board_task_create")
      * @Method("POST")
-     * @Template("FlowerCoreBundle:Board:taskNew.html.twig") //VER CAMBIO EN ANGULAR
+     * @Template("FlowerBoardBundle:Board:taskNew.html.twig") //VER CAMBIO EN ANGULAR
      */
     public function taskProjectCreateAction(Board $board, Request $request)
     {
@@ -271,7 +276,7 @@ class TaskController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         foreach ($tasks as $taskId) {
-            $task = $em->getRepository('FlowerModelBundle:Task')->find($taskId);
+            $task = $em->getRepository('FlowerModelBundle:Board\Task')->find($taskId);
             $task->setStatus($taskStatus);
             $em->flush();
         }
@@ -298,7 +303,7 @@ class TaskController extends Controller
      *
      * @Route("/create/{id}", name="task_create", requirements={"id"="\d+"})
      * @Method("POST")
-     * @Template("FlowerCoreBundle:Task:new.html.twig")
+     * @Template("FlowerBoardBundle:Task:new.html.twig")
      */
     public function createAction(Board $board, Request $request)
     {
@@ -352,7 +357,7 @@ class TaskController extends Controller
      *
      * @Route("/{id}/update", name="task_update", requirements={"id"="\d+"})
      * @Method("PUT")
-     * @Template("FlowerCoreBundle:Task:edit.html.twig")
+     * @Template("FlowerBoardBundle:Task:edit.html.twig")
      */
     public function updateAction(Task $task, Request $request)
     {
@@ -458,7 +463,7 @@ class TaskController extends Controller
      *
      * @Route("/{id}/timelog/new", name="task_timelog_new")
      * @Method("GET")
-     * @Template("FlowerCoreBundle:TimeLog:new.html.twig")
+     * @Template("FlowerBoardBundle:TimeLog:new.html.twig")
      */
     public function timelogNewAction(Task $task)
     {
