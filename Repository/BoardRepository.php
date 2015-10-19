@@ -20,18 +20,4 @@ class BoardRepository extends EntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function getCurrentBoards($accountId = null, $projectId = null, $opportunityId = null)
-    {
-    	$qb = $this->createQueryBuilder("b");
-    	if(!is_null($accountId)) {
-			$qb->where("b.account = :accountId")->setParameter("accountId", $accountId);
-    	}
-    	if(!is_null($projectId)) {
-			$qb->where("b.project = :projectId")->setParameter("projectId", $projectId);
-    	}
-    	if(!is_null($opportunityId)) {
-			$qb->where("b.opportunity = :opportunityId")->setParameter("opportunityId", $opportunityId);
-    	}
-    	return $qb->getQuery()->getResult();
-    }
 }
