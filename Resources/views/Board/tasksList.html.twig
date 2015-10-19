@@ -2,17 +2,17 @@
 
 {% block title %}{{ '%entity% list'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
 
-{% macro thead(name, field, label) %}
+{% macro thead(board, name, field, label) %}
     {% spaceless %}
         {% set sort = app.session.get('sort.' ~ name) %}
         {% if sort and sort.field == field %}
             {% if sort.type == 'DESC' %}
-                <a href="{{ path('task_sort', {field: field, type: 'ASC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort-down"></i></a>
+                <a href="{{ path('board_list_sort', {board: board.id, field: field, type: 'ASC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort-down"></i></a>
                 {% elseif sort.type == 'ASC' %}
-                <a href="{{ path('task_sort', {field: field, type: 'DESC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort-up"></i></a>
+                <a href="{{ path('board_list_sort', {board: board.id, field: field, type: 'DESC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort-up"></i></a>
                 {% endif %}
             {% else %}
-            <a href="{{ path('task_sort', {field: field, type: 'ASC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort"></i></a>
+            <a href="{{ path('board_list_sort', {board: board.id, field: field, type: 'ASC'}) }}">{{ label | trans({},'Task')}} <i class="fa fa-sort"></i></a>
             {% endif %}
         {% endspaceless %}
     {% endmacro %}
@@ -146,11 +146,11 @@
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox"  onclick="selectAll(this)" class="" ></th>
-                            <th scope="col">{{ thead('task', 'id', 'Id') }}</th>
-                            <th scope="col">{{ thead('task', 'name', 'Name') }}</th>
+                            <th scope="col">{{ thead(board,'board', 'id', 'Id') }}</th>
+                            <th scope="col">{{ thead(board,'board', 'name', 'Name') }}</th>
                             <th scope="col">{{ 'status' }}</th>
                             <th scope="col">{{ 'assignee' }}</th>
-                            <th scope="col">{{ thead('task', 'updated', 'Updated') }}</th>
+                            <th scope="col">{{ thead(board,'board', 'updated', 'Updated') }}</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -95,7 +95,7 @@ class BoardController extends Controller
         $qb = $em->getRepository('FlowerModelBundle:Board\Task')->createQueryBuilder('t');
         $qb->where("t.board = :board")->setParameter("board", $board->getId());
 
-        $this->addQueryBuilderSort($qb, 'task');
+        $this->addQueryBuilderSort($qb, 'board');
         $statusFilter = $request->query->get('statusFilter');
         if($statusFilter && count($statusFilter) > 0){
             if(implode(",", $statusFilter)){
@@ -260,13 +260,13 @@ class BoardController extends Controller
     /**
      * Save order.
      *
-     * @Route("/order/{field}/{type}", name="project_sort")
+     * @Route("/order/{board}/{field}/{type}", name="board_list_sort")
      */
-    public function sortAction($field, $type)
+    public function sortAction(Board $board, $field, $type)
     {
-        $this->setOrder('project', $field, $type);
+        $this->setOrder('board', $field, $type);
 
-        return $this->redirect($this->generateUrl('project'));
+        return $this->redirect($this->generateUrl('board_task_list',array("id" => $board->getId())));
     }
 
     /**
