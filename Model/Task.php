@@ -123,6 +123,7 @@ abstract class Task {
     
     public function __construct()
     {
+        $this->position = 0;
     }
     /**
      * Get id
