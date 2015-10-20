@@ -47,13 +47,24 @@ class TaskRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findBetweenOrdersAndProject($from, $to , $project){
+    public function findBetweenOrdersAndProject($from, $to , $board, $status_id)
+    {
         $qb = $this->createQueryBuilder("t");
-        $qb->andWhere("t.project = :project")->setParameter("project", $project);
+        $qb->andWhere("t.board = :board_id")->setParameter("board_id", $board);
+        $qb->andWhere("t.status = :status_id")->setParameter("status_id", $status_id);
         $qb->andWhere("t.position >= :from")->setParameter("from", $from);
         $qb->andWhere("t.position <= :to")->setParameter("to", $to);
         $qb->orderBy("t.updated", "DESC");
         return $qb->getQuery()->getResult();
+    }
+
+    public function findMaxPosByStatus($statusId = null, $board)
+    {
+        $qb = $this->createQueryBuilder("t");
+        $qb->select("MAX(t.position)");
+        $qb->andWhere("t.board = :board_id")->setParameter("board_id", $board);
+        $qb->andWhere("t.status = :status_id")->setParameter("status_id", $statusId);
+        return $qb->getQuery()->getSingleResult();
     }
 
     public function findByStatus($statusId = null, $board_id = null, $max = null)

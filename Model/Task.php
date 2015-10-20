@@ -40,7 +40,6 @@ abstract class Task {
     protected $type;
 
     /**
-     * @Gedmo\SortablePosition
      * @ORM\Column(name="position", type="integer")
      * @Groups({"kanban","search"})
      */
@@ -81,7 +80,6 @@ abstract class Task {
     protected $board;
 
     /**
-     * @Gedmo\SortableGroup
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\TaskStatus")
      * @JoinColumn(name="status_id", referencedColumnName="id")
      * @Groups({"kanban","search"})

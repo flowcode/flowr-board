@@ -63,14 +63,10 @@ class KanbanController extends FOSRestController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskStatusName = $request->get('status');
-        $taskStatus = $em->getRepository("FlowerModelBundle:Board\TaskStatus")->findOneBy(array("name" => $taskStatusName));
         $newPosition = $request->get('pos', 0);
+        $newStatus = $request->get('status');
 
-        $task->setPosition($newPosition);
-        $task->setStatus($taskStatus);
-
-        $em->flush();
+        $this->get("flower.core.service.kanban.order")->kanbanOrderChanged($task, $newPosition, $newStatus);
 
         return new JsonResponse(null, 200);
     }
