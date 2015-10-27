@@ -18,9 +18,9 @@
             <table class="table table-condensed table-hover ">
                 <thead>
                     <tr>
-                        <th scope="col" >Name</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Due date</th>
+                        <th scope="col" >{{'Name' | trans({}, 'Board')}}</th>
+                        <th scope="col">{{'Status' | trans({}, 'Board')}}</th>
+                        <th scope="col">{{'due date' | trans({}, 'Board')}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,11 +29,11 @@
                             <td ><a title="{{ board.description }}" class="" href="{{ path('board_task_kanban', {"id": board.id}) }}">{{ board.name | capitalize }}</a></td>
 
                             {% if board.status == 1 %}
-                            <td>{{'open' | trans | capitalize}}</td>
+                            <td>{{'open' | trans({}, 'Board') | capitalize}}</td>
                             {% else %}
-                            <td>{{'closed' | trans | capitalize}}</td>
+                            <td>{{'closed' | trans({}, 'Board')| capitalize}}</td>
                         {% endif %}
-                            <td>{% if board.dueDate %}{{ board.dueDate|date('Y-m-d H:i') }}{% endif %}</td>
+                            <td>{% if board.dueDate %}{{ board.dueDate|date("smallDate" | trans) }}{% endif %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

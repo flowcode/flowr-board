@@ -1,13 +1,13 @@
 '%entity%': '%entity%'   # FIXME
-'%entity% creation': 'Creación de %entity%'
-'%entity% edit': 'Edición de %entity%'
-'%entity% list': 'Lista de %entity%'
+'%entity% creation': 'Creación de Tablero'
+'%entity% edit': 'Edición de Tablero'
+'%entity% list': 'Lista de Tableros'
 Active: Activo
-Board: Tablero
+Board: Tableros
 Closed: Cerrado
 'Confirm delete': 'Confirmar borrado'
 Create: Crear
-'Create a new %entity%': 'Crear nueva %entity%'
+'Create a new %entity%': 'Crear nuevo Tablero'
 Created: Creado
 Dashboard: Dashboard   # FIXME
 Delete: Borrar
@@ -25,3 +25,8 @@ Updated: Actualizado
 'You are about to delete an item': 'Usted esta por borrar un elemento'
 edit: editar
 'this procedure is irreversible': 'esta accion será irreversible'
+closed: cerrado
+open: abierto
+due date: Fecha de entrega
+Start date: Fecha de inicio
+Due date: Fecha de entrega
