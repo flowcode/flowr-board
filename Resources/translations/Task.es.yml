@@ -1,0 +1,27 @@
+'%entity% creation': 'Creación de %entity%'
+'%entity% edit': 'Edición de %entity%'
+'%entity% list': 'Lista de %entity%'
+Actions: Acciones
+'Confirm delete': 'Confirmar borrado'
+'Create a new %entity%': 'Crear nuevo %entity%'
+Created: Creado
+Dashboard: Dashboard   # FIXME
+Delete: Borrar
+Description: Descripción
+'Do you want to proceed?': '¿Desea continuar de todos modos?'
+Duedate: Fecha de entrega
+Edit: Editar
+Estimated: Estimado   # FIXME
+'No': 'No'   # FIXME
+Save: Guardar
+'Save and add': 'Guardar y agregar otro'
+Spent: Usado
+Status: Estado
+'Task Kamban': 'Kamban de Tareas'   # FIXME
+'Yes': 'Si'
+'You are about to delete an item': 'Usted esta por borrar un elemento'
+bug: bug   # FIXME
+edit: editar
+show: ver
+task: tarea
+'this procedure is irreversible': 'esta accion será irreversible'
