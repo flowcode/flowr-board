@@ -59,14 +59,13 @@ class KanbanController extends FOSRestController
      * @Route("/updateTask/{id}", name="kanban_task_changepos")
      * @Method("POST")
      */
-    public function updateTaskAction(Task $task, Request $request)
+    public function updateTaskAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $newPosition = $request->get('pos', 0);
-        $newStatus = $request->get('status');
+        $positions = $request->get('positions');
 
-        $this->get("flower.core.service.kanban.order")->kanbanOrderChanged($task, $newPosition, $newStatus);
+        $this->get("flower.core.service.kanban.order")->kanbanOrderChanged($positions);
 
         return new JsonResponse(null, 200);
     }
