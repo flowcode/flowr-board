@@ -3,8 +3,8 @@
 namespace Flower\BoardBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
-use Flower\CoreBundle\Form\Type\TaskStatusType;
-use Flower\ModelBundle\Entity\TaskStatus;
+use Flower\BoardBundle\Form\Type\TaskStatusType;
+use Flower\ModelBundle\Entity\Board\TaskStatus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * TaskStatus controller.
  *
- * @Route("/taskstatus")
+ * @Route("/admin/taskstatus")
  */
 class TaskStatusController extends Controller
 {
@@ -30,7 +30,7 @@ class TaskStatusController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:Board/TaskStatus')->createQueryBuilder('t');
+        $qb = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->createQueryBuilder('t');
         $this->addQueryBuilderSort($qb, 'taskstatus');
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
 
