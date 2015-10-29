@@ -1,4 +1,4 @@
-'%entity%': '%entity%'   # FIXME
+'%entity%': '%entity%'
 '%entity% creation': 'Creación de Tablero'
 '%entity% edit': 'Edición de Tablero'
 '%entity% list': 'Lista de Tableros'
@@ -9,24 +9,21 @@ Closed: Cerrado
 Create: Crear
 'Create a new %entity%': 'Crear nuevo Tablero'
 Created: Creado
-Dashboard: Dashboard   # FIXME
+Dashboard: Dashboard
 Delete: Borrar
 Description: Descripción
 'Do you want to proceed?': '¿Desea continuar de todos modos?'
-Duedate: Fecha de entrega
 Edit: Editar
-Id: Id   # FIXME
+Id: Id
 Name: Nombre
-'No': 'No'   # FIXME
-Startdate: Fecha de inicio
+'No': 'No'
+Startdate: 'Fecha de inicio'
 Status: Estado
 Updated: Actualizado
-'Yes': 'Si'
+'Yes': Si
 'You are about to delete an item': 'Usted esta por borrar un elemento'
-edit: editar
-'this procedure is irreversible': 'esta accion será irreversible'
 closed: cerrado
+'due date': 'Fecha de entrega'
+edit: editar
 open: abierto
-due date: Fecha de entrega
-Start date: Fecha de inicio
-Due date: Fecha de entrega
+'this procedure is irreversible': 'esta accion será irreversible'

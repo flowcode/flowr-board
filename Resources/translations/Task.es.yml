@@ -5,22 +5,22 @@ Actions: Acciones
 'Confirm delete': 'Confirmar borrado'
 'Create a new %entity%': 'Crear nuevo %entity%'
 Created: Creado
-Dashboard: Dashboard   # FIXME
+Dashboard: Dashboard
 Delete: Borrar
 Description: Descripción
 'Do you want to proceed?': '¿Desea continuar de todos modos?'
-Duedate: Fecha de entrega
+Duedate: 'Fecha de entrega'
 Edit: Editar
-Estimated: Estimado   # FIXME
-'No': 'No'   # FIXME
+Estimated: Estimado
+'No': 'No'
 Save: Guardar
 'Save and add': 'Guardar y agregar otro'
 Spent: Usado
 Status: Estado
-'Task Kamban': 'Kamban de Tareas'   # FIXME
-'Yes': 'Si'
+'Task Kamban': 'Kamban de Tareas'
+'Yes': Si
 'You are about to delete an item': 'Usted esta por borrar un elemento'
-bug: bug   # FIXME
+bug: bug
 edit: editar
 show: ver
 task: tarea
