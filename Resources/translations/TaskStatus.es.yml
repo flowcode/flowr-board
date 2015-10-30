@@ -1,10 +1,10 @@
-'%entity% creation': 'Creación de %entity%'
-'%entity% edit': 'Edición de %entity%'
-'%entity% list': 'Lista de %entity%'
+'%entity% creation': 'Creación de Estado de Tarea'
+'%entity% edit': 'Edición de Estado de Tarea'
+'%entity% list': 'Lista de Estados de Tarea'
 Actions: Acciones
 'Confirm delete': 'Confirmar borrado'
 Create: Crear
-'Create a new %entity%': 'Crear nueva %entity%'
+'Create a new %entity%': 'Crear nuevo Estado de Tarea'
 Delete: Borrar
 Description: Descripción
 'Do you want to proceed?': '¿Desea continuar de todos modos?'

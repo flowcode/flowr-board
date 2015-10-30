@@ -1,12 +1,12 @@
-'%entity%': '%entity%'
-'%entity% List': 'Lista de %entity%'
-'%entity% creation': 'Creación de %entity%'
-'%entity% edit': 'Edición de %entity%'
-'%entity% list': 'Lista de %entity%'
+'%entity%': 'Log de Horas'
+'%entity% List': 'Lista de Log de Horas'
+'%entity% creation': 'Creación de Log de Horas'
+'%entity% edit': 'Edición de Log de Horas'
+'%entity% list': 'Lista de Log de Horas'
 Actions: Acciones
 'Confirm delete': 'Confirmar borrado'
 Create: Crear
-'Create a new %entity%': 'Crear nueva %entity%'
+'Create a new %entity%': 'Crear nueva Log de Horas'
 Createdon: 'Creado en'
 Dashboard: Dashboard
 Delete: Borrar

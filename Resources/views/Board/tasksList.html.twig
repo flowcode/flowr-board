@@ -84,7 +84,7 @@
                     <form method="get" action="" class=" form-horizontal">
                         <div id="law_filter" class="col-sm-6" >
                             <div class="form-group">
-                                <label class="col-sm-2 control-label " for="assigneeFilter">Assignee</label>
+                                <label class="col-sm-2 control-label " for="assigneeFilter">{{'assignee'| trans({}, 'Task') | capitalize}}</label>
 
                                 <div class="col-sm-8">
                                     {% set multiple = "" %}
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="statusFilter">Status</label>
+                                <label class="col-sm-2 control-label" for="statusFilter">{{'status'| trans({}, 'Task')  | capitalize}}</label>
 
                                 <div class="col-sm-8" class="input-group">
                                     {% set multiple = "" %}
@@ -151,8 +151,8 @@
                             <th scope="col"><input type="checkbox"  onclick="selectAll(this)" class="" ></th>
                             <th scope="col">{{ thead(board,'board', 'id', 'Id') }}</th>
                             <th scope="col">{{ thead(board,'board', 'name', 'Name') }}</th>
-                            <th scope="col">{{ thead(board,'board', 's.name', 'status') }}</th>
-                            <th scope="col">{{ 'assignee' }}</th>
+                            <th scope="col">{{ thead(board,'board', 's.name', 'Status') }}</th>
+                            <th scope="col">{{ 'Assignee'| trans({}, 'Task') }}</th>
                             <th scope="col">{{ thead(board,'board', 'updated', 'Updated') }}</th>
                         </tr>
                     </thead>
