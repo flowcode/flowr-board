@@ -14,7 +14,7 @@
                 <div class="box-tools pull-right">
                     <a class="btn btn-link" href={{ path('board_task_list', { 'id' : board.id }) }}>
                         {{ 'List view'|trans }}
-                    </a>  
+                    </a>
                 </div>
             </div>
             <div class="box-body">
@@ -32,10 +32,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+
     <script type="text/javascript">
         var appPath = "{{ path("dashboard") }}";
         var boardId = "{{ board.id }}";
     </script>
+
     <script src="{{ asset('bundles/flowercore/js/plugins/events.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/flowercore/js/angular/sortable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/flowercore/js/angular/ngStorage.js') }}" type="text/javascript"></script>
