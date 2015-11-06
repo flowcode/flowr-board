@@ -64,13 +64,7 @@ class KanbanController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
 
         $positions = $request->get('positions');
-
         $this->get("flower.core.service.kanban.order")->kanbanOrderChanged($positions);
-
-        /* send notifications */
-        $pusher = $this->container->get('lopi_pusher.pusher');
-        $pusher->trigger( 'board-'.$id, 'position-update', 'update' );
-
         return new JsonResponse(null, 200);
     }
 
