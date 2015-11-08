@@ -57,6 +57,7 @@ abstract class Task {
      * @var float
      *
      * @ORM\Column(name="estimated_hours", type="float", nullable=true)
+     * @Groups({"kanban","search"})
      */
     protected $estimated;
 

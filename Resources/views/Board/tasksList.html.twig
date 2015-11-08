@@ -21,9 +21,7 @@
 
 
 {% block body %}
-    {% if project %}
-        {{ include("FlowerProjectBundle:Project:header.html.twig", { 'project': project }) }}
-    {% endif %}
+        {{ include("FlowerBoardBundle:Board:header.html.twig", { 'board': board }) }} 
     <section class="content">
         <div class="box-header">
             <h3 class="box-title">{{ board.name | capitalize }}</h3>

@@ -79,10 +79,10 @@ class KanbanController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $task->setName($request->get("name"));
         $task->setDescription($request->get("description"));
-
+        $task->setEstimated($request->get("estimated"));
         $em->flush();
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse($task, 200);
     }
 
     /**

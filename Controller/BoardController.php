@@ -74,8 +74,13 @@ class BoardController extends Controller
             $status["tasks"] = $taskRepo->findByStatusByPos($projStatus->getId(), $board->getId());
             $tasks[] = $status;
         }
-
+        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($board);
+        $opportunity = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Opportunity")->findByBoard($board);
+        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($board);
         return array(
+            'board_opportunity' => $opportunity,
+            'board_project' => $project,
+            'board_account' => $account,
             'board' => $board,
             'tasks' => $tasks,
         );
@@ -124,14 +129,19 @@ class BoardController extends Controller
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
         $statuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->findAll();
         $users = $em->getRepository('FlowerModelBundle:User\User')->findAll();
-        $project = $em->getRepository('FlowerModelBundle:Project\Project')->findByBoard($board);
+
+        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($board);
+        $opportunity = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Opportunity")->findByBoard($board);
+        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($board);
         return array(
+            'board_opportunity' => $opportunity,
+            'board_project' => $project,
+            'board_account' => $account,
             'assigneeFilter' => $assigneeFilter,
             'statusFilter' => $statusFilter,
             'users' => $users,
             'statuses' => $statuses,
             'board' => $board,
-            'project' => $project,
             'paginator' => $paginator,
         );
     }

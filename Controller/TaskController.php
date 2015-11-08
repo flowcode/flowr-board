@@ -319,9 +319,9 @@ class TaskController extends Controller
             $em->flush();
 
 
-            $nextAction = $form->get('saveAndAdd')->isClicked() ? 'task_new' : 'task';
+            $nextAction = $form->get('saveAndAdd')->isClicked() ? 'task_new' : 'task_show';
 
-            return $this->redirectToRoute($nextAction, array("id" => $board->getId()));
+            return $this->redirectToRoute($nextAction, array("id" => $task->getId()));
         }
 
         return array(
@@ -345,7 +345,20 @@ class TaskController extends Controller
         ));
         $deleteForm = $this->createDeleteForm($task->getId(), 'task_delete');
 
+        $historyEntries = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\History")->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
+        $tasklogs = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
+        $spent = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
+        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
+        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($task->getBoard());
+        if(!$account && $project){
+            $account = $project->getAccount();
+        }
         return array(
+            'project' => $project,
+            'account' => $account,
+            'spent' => $spent,
+            'history_entries' => $historyEntries,
+            'tasklogs' => $tasklogs,
             'task' => $task,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

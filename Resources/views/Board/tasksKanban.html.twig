@@ -3,7 +3,7 @@
 {% block title %}{{ '%entity% list'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
 
 {% block body %}
-    {# {{ include("FlowerBoardBundle:Board:header.html.twig", { 'board': board }) }} #}
+     {{ include("FlowerBoardBundle:Board:header.html.twig", { 'board': board }) }} 
     <section class="content" multi-app="flowerKanban">
         <div class="box">
             <div class="box-header">
