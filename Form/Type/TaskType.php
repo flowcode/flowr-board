@@ -30,7 +30,6 @@ class TaskType extends AbstractType
                 ->add('assignee', 'entity', array(
                     'class' => 'FlowerModelBundle:User\User',
                 ))
-                ->add('description', null, array('required' => false, 'attr' => array('class' => 'textarea-wysihtml5')))
                 ->add('estimated', null, array('required' => false))
                 ->add('dueDate','collot_datetime', array( 'required' => false,
                                                 'pickerOptions' =>
@@ -49,6 +48,7 @@ class TaskType extends AbstractType
                 ))
                 ->add('status', null, array('required' => true))
                 ->add('tracker')
+                ->add('description', null, array('required' => false, 'attr' => array('class' => 'textarea-wysihtml5')))
                 ->add('save', 'submit', array('label' => 'Save'))
                 ->add('saveAndAdd', 'submit', array('label' => 'Save and add'))
         ;
