@@ -93,7 +93,13 @@ class TaskController extends Controller
         $tasklogs = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
         $spent = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
         $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
+        $editForm = $this->createForm($this->get('form.type.task'), $task, array(
+            'action' => $this->generateUrl('task_update', array('id' => $task->getid())),
+            'method' => 'PUT',
+        ));
+
         return array(
+            'edit_form' => $editForm->createView(),
             'spent' => $spent,
             'task' => $task,
             'account' => $account,
