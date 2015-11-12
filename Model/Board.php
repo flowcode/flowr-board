@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Board
@@ -21,6 +22,7 @@ abstract  class Board
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"entity","public_api"})
      */
     protected $id;
 
@@ -28,6 +30,7 @@ abstract  class Board
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Groups({"entity","public_api"})
      */
     protected $name;
 
@@ -35,6 +38,7 @@ abstract  class Board
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @Groups({"entity","public_api"})
      */
     protected $description;
 
@@ -49,7 +53,7 @@ abstract  class Board
     /**
      * @OneToMany(targetEntity="Flower\ModelBundle\Entity\Board\Task", mappedBy="board")
      * */
-    protected $tasks;    
+    protected $tasks;
 
     /**
      * @var \DateTime
@@ -85,7 +89,7 @@ abstract  class Board
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -108,7 +112,7 @@ abstract  class Board
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -131,7 +135,7 @@ abstract  class Board
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -154,7 +158,7 @@ abstract  class Board
     /**
      * Get status
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -177,7 +181,7 @@ abstract  class Board
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -200,7 +204,7 @@ abstract  class Board
     /**
      * Get dueDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDueDate()
     {
@@ -223,7 +227,7 @@ abstract  class Board
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -246,7 +250,7 @@ abstract  class Board
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -286,7 +290,7 @@ abstract  class Board
     /**
      * Get tasks
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTasks()
     {
