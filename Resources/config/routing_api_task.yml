@@ -1,0 +1,12 @@
+flower_board_api_task_getbyboard:
+    path:     /board/{board_id}
+    defaults: { _controller: FlowerBoardBundle:Api\Task:getByBoard }
+
+
+flower_board_api_task_getone:
+    path:     /{id}
+    defaults: { _controller: FlowerBoardBundle:Api\Board:getById }
+
+flower_board_api_task_getall:
+    path:     /
+    defaults: { _controller: FlowerBoardBundle:Api\Board:getAll }

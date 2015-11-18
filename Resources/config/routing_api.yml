@@ -1,0 +1,15 @@
+flower_board_api_getbyproject:
+    path:     /project/{projectId}
+    defaults: { _controller: FlowerBoardBundle:Api\Board:getByProject }
+
+flower_board_api_getbyaccount:
+    path:     /account/{accountId}
+    defaults: { _controller: FlowerBoardBundle:Api\Board:getByAccount }
+
+flower_board_api_getone:
+    path:     /{id}
+    defaults: { _controller: FlowerBoardBundle:Api\Board:getById }
+
+flower_board_api_getall:
+    path:     /
+    defaults: { _controller: FlowerBoardBundle:Api\Board:getAll }
