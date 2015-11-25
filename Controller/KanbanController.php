@@ -80,7 +80,8 @@ class KanbanController extends FOSRestController
         $task->setName($request->get("name"));
         $task->setDescription($request->get("description"));
         $task->setEstimated($request->get("estimated"));
-        $em->flush();
+        $taskService = $this->get("flower.core.service.task");
+        $taskService->update($task);
 
         return new JsonResponse($task, 200);
     }
@@ -114,7 +115,8 @@ class KanbanController extends FOSRestController
         $task->setTracker($devTracker);
 
         $em->persist($task);
-        $em->flush();
+        $taskService = $this->get("flower.core.service.task");
+        $taskService->update($task);
 
 
         $view = FOSView::create($task, Codes::HTTP_OK)->setFormat('json');
@@ -139,7 +141,8 @@ class KanbanController extends FOSRestController
             $task->setCreator($this->getUser());
 
             $em->persist($task);
-            $em->flush();
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->update($task);
 
 
             $nextAction = $form->get('saveAndAdd')->isClicked() ? 'task_new' : 'task';
@@ -259,7 +262,8 @@ class KanbanController extends FOSRestController
         if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($task);
-            $em->flush();
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->update($task);
         }
 
         return $this->redirect($this->generateUrl('task'));

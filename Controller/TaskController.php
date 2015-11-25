@@ -229,11 +229,16 @@ class TaskController extends Controller
         if(!$tasks){
             return new JsonResponse(null, 403);
         }
+        $task = null;
         $em = $this->getDoctrine()->getManager();
         foreach ($tasks as $taskId) {
             $task = $em->getRepository('FlowerModelBundle:Board\Task')->find($taskId);
             $task->setAssignee($user);
             $em->flush();
+        }
+        if($task && $task->getBoard()){
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->massiveUpdate($task->getBoard());
         }
         return new JsonResponse(null, 200);
     }
@@ -280,11 +285,16 @@ class TaskController extends Controller
         if(!$tasks){
             return new JsonResponse(null, 403);
         }
+        $task = null;
         $em = $this->getDoctrine()->getManager();
         foreach ($tasks as $taskId) {
             $task = $em->getRepository('FlowerModelBundle:Board\Task')->find($taskId);
             $task->setStatus($taskStatus);
             $em->flush();
+        }
+        if($task && $task->getBoard()){
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->massiveUpdate($task->getBoard());
         }
         return new JsonResponse(null, 200);
     }
@@ -322,8 +332,8 @@ class TaskController extends Controller
             $task->setCreator($this->getUser());
 
             $em->persist($task);
-            $em->flush();
-
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->update($task);
 
             $nextAction = $form->get('saveAndAdd')->isClicked() ? 'task_new' : 'task_show';
 
@@ -350,12 +360,12 @@ class TaskController extends Controller
             'method' => 'PUT',
         ));
         $deleteForm = $this->createDeleteForm($task->getId(), 'task_delete');
-
-        $historyEntries = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\History")->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
-        $tasklogs = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
-        $spent = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
-        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
-        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($task->getBoard());
+        $em = $this->getDoctrine()->getManager();
+        $historyEntries = $em->getRepository("FlowerModelBundle:Board\History")->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
+        $tasklogs = $em->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
+        $spent = $em->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
+        $account = $em->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
+        $project = $em->getRepository("FlowerModelBundle:Project\Project")->findByBoard($task->getBoard());
         if(!$account && $project){
             $account = $project->getAccount();
         }
@@ -385,8 +395,8 @@ class TaskController extends Controller
             'method' => 'PUT',
         ));
         if ($editForm->handleRequest($request)->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->update($task);
             return $this->redirect($this->generateUrl('task_show', array('id' => $task->getId())));
         }
         $deleteForm = $this->createDeleteForm($task->getId(), 'task_delete');
