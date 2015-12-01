@@ -3,60 +3,51 @@
 {% block title %}{{ '%entity% edit'|trans({'%entity%': 'Board'}, 'Board') }} - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <section class="content-header">
-        <h1>
-        <a href="{{ path('board') }}">{{ 'Board' | trans({}, 'Board')}}</a>
-        /
-        <a href="{{ path('board_task_kanban',{id:board.id}) }}">
-            {{board.name | capitalize}}
-        </a>
-        </h1>
-    </section>    
     <section class="content">
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board_kamban': true, 'board':board }) }} 
         <div class="box">
             <div class="box-header">
+                <div class="box-tools  pull-right">
+                    {{ form_start(delete_form) }}
+                    {{ form_widget(delete_form) }}
+                    <div class="btn-group record_actions">
+                        <button class="btn btn-link btn-sm" type="submit"> {{ 'Delete'|trans({}, 'Board') }}</button>
+                    </div>
+                    <input name="modal" type="hidden" value="0">
+                    {{ form_end(delete_form) }}
+                </div>
             </div>
             <div class="box-body">
 
             {{ form_start(edit_form) }}
                 {{ form_widget(edit_form) }}
                 <p>
-                    <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> {{ 'Edit'|trans({}, 'Board') }}</button>
+                    <button class="btn btn-default" type="submit">{{ 'save'|trans | capitalize }}</button>
                 </p>
             {{ form_end(edit_form) }}
             </div>
             <div class="box-footer">
-            {{ form_start(delete_form) }}
-        {{ form_widget(delete_form) }}
 
-        <div class="btn-group record_actions">
 
-            <button class="btn btn-danger" type="submit"><i class="fa fa-trash-o"></i> {{ 'Delete'|trans({}, 'Board') }}</button>
-
-        </div>
-
-        <input name="modal" type="hidden" value="0">
-    {{ form_end(delete_form) }}
-
-    <div id="delete_confirm" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3>{{ 'Confirm delete'|trans({}, 'Board') }}</h3>
-                </div>
-                <div class="modal-body">
-                    <p>{{ 'You are about to delete an item'|trans({}, 'Board') }}, {{ 'this procedure is irreversible'|trans({}, 'Board') }}.</p>
-                    <p>{{ 'Do you want to proceed?'|trans({}, 'Board') }}</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Board') }}</button>
-                    <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'Board') }}</button>
+                <div id="delete_confirm" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h3>{{ 'Confirm delete'|trans({}, 'Board') }}</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ 'You are about to delete an item'|trans({}, 'Board') }}, {{ 'this procedure is irreversible'|trans({}, 'Board') }}.</p>
+                                <p>{{ 'Do you want to proceed?'|trans({}, 'Board') }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Board') }}</button>
+                                <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'Board') }}</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
         </div>
     </section>
 {% endblock %}

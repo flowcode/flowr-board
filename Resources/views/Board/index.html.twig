@@ -2,10 +2,8 @@
 
 {% block title %}{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }} - {{ parent() }}{% endblock %}
 {% block body %}
-    <section class="content-header">
-        <h1>{{ 'Board' | trans({}, 'Board')}}</h1>
-    </section>
     <section class="content">    
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board': true }) }} 
         <div class="box">
             <div class="box-header">
                 <div class="box-tools pull-right">

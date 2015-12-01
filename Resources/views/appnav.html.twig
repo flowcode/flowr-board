@@ -1,0 +1,24 @@
+		<div class="nav-app">
+            <ul class="nav nav-tabs ">
+                <li role="presentation" class="app-icon bg-aqua">
+                    <i class="fa fa-thumb-tack"></i>
+                </li>
+                <li role="presentation" 
+                {% if app_board is defined %}class="active"{% endif %}
+                >
+                    <a href="{{ path('board') }}">{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</a>
+                </li>
+                {% if board is defined %}
+                    <li role="presentation" 
+                    {% if app_board_kamban is defined %}class="active"{% endif %}
+                    >
+                        <a href="{{ path('board_task_kanban',{"id":board.id}) }}">{{ 'Kanban view'|trans }}</a>
+                    </li>
+                    <li role="presentation" 
+                    {% if app_board_list is defined and board is defined %}class="active"{% endif %}
+                    >
+                        <a href="{{ path('board_task_list',{"id":board.id}) }}">{{ 'List view'|trans }}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>

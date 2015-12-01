@@ -1,5 +1,5 @@
-<section class="content-header">
-    <h1>
+<div>
+    <small>
         {% if board_account %}
 	            <a href="{{ path('account_show', { 'id': board_account.id }) }}">{{ board_account|capitalize }}</a>
         {% endif %}
@@ -17,5 +17,5 @@
 	        <i class="fa fa-angle-right"></i>
 	        <a href="{{ path('project_show', { 'id': board_project.id }) }}">{{ board_project|capitalize }}</a>
         {% endif %}
-    </h1>
-</section>
+    </small>
+</div>

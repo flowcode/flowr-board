@@ -45,10 +45,15 @@ class BoardController extends Controller
     {
         $deleteForm = $this->createDeleteForm($board->getId(), 'board_delete');
 
-        return $this->redirect($this->generateUrl('board_task_kanban', array('id' => $board->getId())));
+//        return $this->redirect($this->generateUrl('board_task_kanban', array('id' => $board->getId())));
+        $editForm = $this->createForm($this->get("form.type.board"), $board, array(
+            'action' => $this->generateUrl('board_update', array('id' => $board->getid())),
+            'method' => 'PUT',
+        ));
 
         return array(
             'board' => $board,
+            'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }

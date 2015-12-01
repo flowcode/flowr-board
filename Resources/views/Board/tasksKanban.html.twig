@@ -3,17 +3,15 @@
 {% block title %}{{ '%entity% list'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
 
 {% block body %}
-     {{ include("FlowerBoardBundle:Board:header.html.twig", { 'board': board }) }} 
     <section class="content" multi-app="flowerKanban">
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board_kamban': true, 'board':board }) }} 
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{ board.name|capitalize }}</h3>
-                <a class=" btn-sm" href="{{ path('board_edit', {"id": board.id}) }}">
-                {{ 'edit'|trans({}, 'Board') }}
-                </a>
+                {{ include("FlowerBoardBundle:Board:header.html.twig", { 'board': board }) }}
                 <div class="box-tools pull-right">
-                    <a class="btn btn-link" href={{ path('board_task_list', { 'id' : board.id }) }}>
-                        {{ 'List view'|trans }}
+                    <a class=" btn-sm" href="{{ path('board_show', {"id": board.id}) }}">
+                    {{ 'Edit'|trans({}, 'Board') }}
                     </a>
                 </div>
             </div>
