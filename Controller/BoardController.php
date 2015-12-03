@@ -43,6 +43,11 @@ class BoardController extends Controller
      */
     public function showAction(Board $board)
     {
+
+        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($board);
+        $opportunity = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Opportunity")->findByBoard($board);
+        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($board);
+        
         $deleteForm = $this->createDeleteForm($board->getId(), 'board_delete');
 
 //        return $this->redirect($this->generateUrl('board_task_kanban', array('id' => $board->getId())));
@@ -52,6 +57,9 @@ class BoardController extends Controller
         ));
 
         return array(
+            'project' => $project,
+            'account' => $account,
+            'opportunity' => $opportunity,
             'board' => $board,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -211,6 +219,10 @@ class BoardController extends Controller
      */
     public function editAction(Board $board)
     {
+        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($board);
+        $opportunity = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Opportunity")->findByBoard($board);
+        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($board);
+
         $editForm = $this->createForm($this->get("form.type.board"), $board, array(
             'action' => $this->generateUrl('board_update', array('id' => $board->getid())),
             'method' => 'PUT',

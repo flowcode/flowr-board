@@ -35,6 +35,24 @@
                             <th scope="row">{{'Status'|trans({}, 'Board')}}</th>
                             <td>{{ board.status }}</td>
                         </tr>
+                        {% if project %}
+                            <tr>
+                                <th scope="row">{{'Project'|trans({}, 'Board')}}</th>
+                                <td>{{ project.name }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if account %}
+                            <tr>
+                                <th scope="row">{{'Account'|trans({}, 'Board')}}</th>
+                                <td>{{ account.name }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if opportunity %}
+                            <tr>
+                                <th scope="row">{{'Opportunity'|trans({}, 'Board')}}</th>
+                                <td>{{ opportunity.name }}</td>
+                            </tr>
+                        {% endif %}
                         <tr>
                             <th scope="row">{{'Startdate'|trans({}, 'Board')}}</th>
                             <td>{{ board.startDate|date("smallDate" | trans) }}</td>
@@ -83,6 +101,7 @@
             {{ form_end(edit_form) }}
             </div>
         </div>
+
         <div id="delete_confirm" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">

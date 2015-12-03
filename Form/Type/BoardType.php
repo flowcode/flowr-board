@@ -5,6 +5,7 @@ namespace Flower\BoardBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Flower\ProjectBundle\Form\Type\ProjectType;
 
 class BoardType extends AbstractType
 {
@@ -23,6 +24,7 @@ class BoardType extends AbstractType
                         1 => "Active",
                     )
                 ))
+            //->add('project', new ProjectType())
             ->add('startDate','collot_datetime', array( 'required' => false,
                                                 'pickerOptions' =>
                                                 array('format' => 'dd/mm/yyyy  hh:ii',
