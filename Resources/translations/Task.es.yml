@@ -12,6 +12,7 @@ Description: Descripción
 Duedate: 'Fecha de entrega'
 Edit: Editar
 Estimated: Estimado
+Task: Tarea
 'No': 'No'
 Save: Guardar
 'Save and add': 'Guardar y agregar otro'
@@ -30,3 +31,7 @@ Assignee: Asignado
 Status: Estado
 Name: Nombre
 Updated: Actualizado
+activity: actividad
+logs: registros
+log time: registro horas
+updated on: actualizado el

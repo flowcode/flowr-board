@@ -3,16 +3,8 @@
 {% block title %}Task - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <section class="content-header">
-        <h1>                
-            {% if account %}
-                <a href="{{ path('account_show', { 'id': account.id }) }}">{{ account|title}}</a>  
-            {% endif %}
-            <i class="fa fa-angle-right"></i>
-            <a href="{{ path('board_show', { 'id': task.board.id }) }}">{{ task.board.name|title}}</a>
-        </h1>
-    </section>
     <section class="content">    
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board':task.board }) }} 
         <div class="box" id="showTaks">
             <div class="box-header">
                 <h3 class="box-title">#{{task.id}} {{ task.name|capitalize}}</h3>
@@ -20,16 +12,10 @@
                     {{ form_start(delete_form) }}
                     {{ form_widget(delete_form) }}
                     <div class="btn-group record_actions">
-                        <a href="{{ path('board_task_list', { 'id' : task.board.id }) }}" class=" btn-sm">
-                            {{ 'board task list'|title}}
+                        <a class="btn btn-link  btn-sm" href="{{ path('task_timelog_new', { 'id' : task.id }) }}">
+                            <i class="fa fa-clock-o"></i> {{'log time'|trans({},'Task')|capitalize}}
                         </a>
-                        <a  href="{{ path('board_task_kanban', { 'id' : task.board.id }) }}" class=" btn-sm">
-                            {{ 'Kanban view'|trans }}
-                        </a>
-                        <button class=" btn-link  btn-sm" type="submit">{{ 'Delete'|trans({}, 'Task') }}</button>
-                        <a class=" btn-sm" href="{{ path('task_timelog_new', { 'id' : task.id }) }}">
-                            <i class="fa fa-clock-o"></i> log time
-                        </a>
+                        <button class="btn btn-link  btn-sm" type="submit">{{ 'Delete'|trans({}, 'Task') }}</button>
                         <a class="btn btn-link  btn-sm" onclick="showEdit(true)">
                             {{ 'Edit'|trans({}, 'Account') }}
                         </a>
@@ -60,7 +46,7 @@
                 <p>
                     <span>{{ 'Added by'|trans }}</span>
                     <a href="">{{ task.creator }}</a>,
-                    updated on {{ task.updated|date('Y-m-d H:i') }}.
+                    {{'updated on'|trans({},'Task')}} {{ task.updated|date('fullDateTime'|trans) }}.
                 </p>
                 <div class="row">
                     <div class="col-sm-6">
@@ -76,11 +62,11 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="col-sm-2">{{'Created'|trans({}, 'Task')}}</label>
-                            {{ task.created|date('Y-m-d H:i') }}
+                            {{ task.created|date('fullDateTime'|trans) }}
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2">{{'Duedate'|trans({}, 'Task')}}</label>
-                            {{ task.dueDate|date('Y-m-d H:i') }}
+                            {{ task.dueDate|date('fullDateTime'|trans) }}
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -176,7 +162,7 @@
             <div class="col-sm-6">
                 <div class="box box-solid collapsed-box">
                     <div class="box-header">
-                        <h4 class="box-title">Activity</h4>
+                        <h4 class="box-title">{{'activity' | trans({},'Task') | capitalize}}</h4>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                         </div>
@@ -191,11 +177,11 @@
                                         {% set previous_item = history_entries[loop.index0 - 1] %}
                                     {% endif %}
 
-                                    {% if loop.first or (previous_item.changedOn|date('d/m/Y') != entry.changedOn|date('d/m/Y')) %}
+                                    {% if loop.first or (previous_item.changedOn|date('smallDate'|trans) != entry.changedOn|date('smallDate'|trans)) %}
                                         <!-- timeline time label -->
                                         <li class="time-label">
                                             <span class="bg-light-blue">
-                                                {{ entry.changedOn|date('d/m/Y') }}
+                                                {{ entry.changedOn|date('smallDate'|trans) }}
                                             </span>
                                         </li>
                                         <!-- /.timeline-label -->
@@ -225,7 +211,7 @@
             <div class="col-sm-6">
                 <div class="box box-solid collapsed-box">
                     <div class="box-header">
-                        <h4 class="box-title">Logs</h4>
+                        <h4 class="box-title">{{'logs'| trans({},'Task')| capitalize}}</h4>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                         </div>
@@ -240,11 +226,11 @@
                                         {% set previous_item = tasklogs[loop.index0 - 1] %}
                                     {% endif %}
 
-                                    {% if loop.first or (previous_item.spentOn|date('d/m/Y') != entry.spentOn|date('d/m/Y')) %}
+                                    {% if loop.first or (previous_item.spentOn|date('smallDate'|trans) != entry.spentOn|date('smallDate'|trans)) %}
                                         <!-- timeline time label -->
                                         <li class="time-label">
                                             <span class="bg-light-blue">
-                                                {{ entry.spentOn|date('d/m/Y') }}
+                                                {{ entry.spentOn|date('smallDate'|trans) }}
                                             </span>
                                         </li>
                                         <!-- /.timeline-label -->

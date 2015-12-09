@@ -74,11 +74,11 @@
                                         {% set previous_item = history_entries[loop.index0 - 1] %}
                                     {% endif %}
 
-                                    {% if loop.first or (previous_item.changedOn|date('d/m/Y') != entry.changedOn|date('d/m/Y')) %}
+                                    {% if loop.first or (previous_item.changedOn|date('smallDate'|trans) != entry.changedOn|date('smallDate'|trans)) %}
                                         <!-- timeline time label -->
                                         <li class="time-label">
                                             <span class="bg-light-blue">
-                                                {{ entry.changedOn|date('d/m/Y') }}
+                                                {{ entry.changedOn|date('smallDate'|trans) }}
                                             </span>
                                         </li>
                                         <!-- /.timeline-label -->
@@ -123,11 +123,11 @@
                                         {% set previous_item = tasklogs[loop.index0 - 1] %}
                                     {% endif %}
 
-                                    {% if loop.first or (previous_item.spentOn|date('d/m/Y') != entry.spentOn|date('d/m/Y')) %}
+                                    {% if loop.first or (previous_item.spentOn|date('smallDate'|trans) != entry.spentOn|date('smallDate'|trans)) %}
                                         <!-- timeline time label -->
                                         <li class="time-label">
                                             <span class="bg-light-blue">
-                                                {{ entry.spentOn|date('d/m/Y') }}
+                                                {{ entry.spentOn|date('smallDate'|trans) }}
                                             </span>
                                         </li>
                                         <!-- /.timeline-label -->

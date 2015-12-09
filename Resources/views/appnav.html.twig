@@ -19,6 +19,11 @@
                     >
                         <a href="{{ path('board_task_list',{"id":board.id}) }}">{{ 'List view'|trans }}</a>
                     </li>
+                    {% if task is defined and task.id %}
+                        <li role="presentation" class="active">
+                            <a href="{{ path('task_show',{"id":task.id}) }}">{{ 'Task'|trans({},'Task') }}</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </div>

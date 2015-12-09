@@ -55,9 +55,9 @@
                             <td><a href="{{ path('timelog_show', {id: timelog.id}) }}">{{ timelog.id }}</a></td>
                             <td>{{ timelog.hours }}</td>
                             <td>{{ timelog.description }}</td>
-                            <td>{% if timelog.spentOn %}{{ timelog.spentOn|date('Y-m-d H:i:s') }}{% endif %}</td>
-                            <td>{% if timelog.createdOn %}{{ timelog.createdOn|date('Y-m-d H:i:s') }}{% endif %}</td>
-                            <td>{% if timelog.updatedOn %}{{ timelog.updatedOn|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if timelog.spentOn %}{{ timelog.spentOn|date('fullDateTime'|trans) }}{% endif %}</td>
+                            <td>{% if timelog.createdOn %}{{ timelog.createdOn|date('fullDateTime'|trans) }}{% endif %}</td>
+                            <td>{% if timelog.updatedOn %}{{ timelog.updatedOn|date('fullDateTime'|trans) }}{% endif %}</td>
                             <td>
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm" href="{{ path('timelog_show', {id: timelog.id}) }}">

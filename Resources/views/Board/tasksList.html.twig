@@ -161,7 +161,7 @@
                                 </td>
                                 <td>{{ task.status }}</td>
                                 <td>{{ task.assignee }}</td>
-                                <td title="{% if task.updated %}{{ task.updated|date('Y-m-d H:i') }}{% endif %}">{% if task.updated %}{{ task.updated|date('H:i d/m ') }}{% endif %}</td>
+                                <td title="{% if task.updated %}{{ task.updated|date('fullDateTime'| trans) }}{% endif %}">{% if task.updated %}{{ task.updated|date('H:i d/m ') }}{% endif %}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

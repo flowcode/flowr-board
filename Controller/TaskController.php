@@ -501,6 +501,7 @@ class TaskController extends Controller
         $form = $this->createForm(new TimeLogType(), $timelog);
 
         return array(
+            'task'=> $task,
             'timelog' => $timelog,
             'form' => $form->createView(),
         );

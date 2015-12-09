@@ -3,10 +3,8 @@
 {% block title %}{{ '%entity% creation'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <section class="content-header">
-        <h1>{{ task.type|trans|capitalize}}</h1>
-    </section>        
     <section class="content">
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': board }) }} 
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">{{ '%entity% creation'|trans({'%entity%': 'Task'}, 'Task') }}</h3>

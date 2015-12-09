@@ -32,15 +32,15 @@
                         </tr>
                         <tr>
                             <th scope="row">{{'Spenton'|trans({}, 'TimeLog')}}</th>
-                            <td>{{ timelog.spentOn|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ timelog.spentOn|date('fullDateTime'|trans) }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{'Createdon'|trans({}, 'TimeLog')}}</th>
-                            <td>{{ timelog.createdOn|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ timelog.createdOn|date('fullDateTime'|trans) }}</td>
                         </tr>
                         <tr>
                             <th scope="row">{{'Updatedon'|trans({}, 'TimeLog')}}</th>
-                            <td>{{ timelog.updatedOn|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ timelog.updatedOn|date('fullDateTime'|trans) }}</td>
                         </tr>
                     </tbody>
                 </table>
