@@ -4,3 +4,4 @@ Assignee: Assignado
 'List view': 'Vista Lista'
 'assignee to': 'assignado a'
 'change status': 'cambiar estado'
+error.delete.task: La tarea no puede ser eliminada ya que contiene horas registradas.

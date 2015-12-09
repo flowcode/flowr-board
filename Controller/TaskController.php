@@ -461,14 +461,25 @@ class TaskController extends Controller
      */
     public function deleteAction(Task $task, Request $request)
     {
+        $board = $task->getBoard();
         $form = $this->createDeleteForm($task->getId(), 'task_delete');
-        if ($form->handleRequest($request)->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($task);
-            $em->flush();
-        }
+        $em = $this->getDoctrine()->getManager();
+        $tasklogs = $em->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
+        if(count($tasklogs) > 0){
+            $this->addFlash(
+                    'danger',
+                     $this->get('translator')->trans('error.delete.task')
+                );
+            return $this->redirect($this->generateUrl('task_show',array("id" => $task->getId())));
+        }else{
+            if ($form->handleRequest($request)->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($task);
+                $em->flush();
+            }
 
-        return $this->redirect($this->generateUrl('task'));
+            return $this->redirect($this->generateUrl('board_task_kanban',array("id"=> $board->getId() )));
+        }
     }
 
     /**
