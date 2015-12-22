@@ -21,7 +21,8 @@ class BoardType extends AbstractType
                     'choices' => array(
                         0 => "Closed",
                         1 => "Active",
-                    )
+                    ),
+                    'data' => 1
                 ))
             ->add('startDate','collot_datetime', array( 'required' => false,
                                                 'pickerOptions' =>
