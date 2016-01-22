@@ -21,4 +21,28 @@ class TimeLogRepository extends EntityRepository
         
         return $qb->getQuery()->getSingleScalarResult();
     }
+    
+    /* Returns sum of all hours */
+    public function getAllSpent()
+    {
+        $qb = $this->createQueryBuilder("tl");
+        $qb->select("SUM(tl.hours)");
+        
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /* Returns sum of all hours */
+    public function getSpent(Task $task = null, User $user = null)
+    {
+        $qb = $this->createQueryBuilder("tl");
+        $qb->select("SUM(tl.hours)");
+        if($task){
+        	$qb->where("tl.task = :task")->setParameter("task", $task);
+        }
+        if($user){
+        	$qb->andWhere("tl.user = :user")->setParameter("user", $user);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
