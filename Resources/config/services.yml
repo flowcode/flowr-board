@@ -1,4 +1,6 @@
 services:
-#    flower_core.example:
-#        class: Flower\CoreBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+
+    board.service.task:
+        class: Flower\BoardBundle\Service\TaskService
+        calls:
+            - [setContainer, ["@service_container"]]

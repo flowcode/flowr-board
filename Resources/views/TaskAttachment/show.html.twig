@@ -1,0 +1,87 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}TimeLog - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>{{ 'TimeLog' | trans({}, 'TimeLog')}}</h1>
+        <ol class="breadcrumb">
+            <li><a href={{ path('dashboard') }}><i class="fa fa-dashboard"></i> {{"Dashboard" | trans({}, 'TimeLog')}}</a></li>
+            <li><a href="{{ path('timelog') }}"> {{ '%entity% list'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</a></li>
+            <li class="active" >{{ '%entity%'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</li>
+        </ol>
+    </section>
+    <section class="content">    
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title"></h3>                            </div>
+            <div class="box-body">
+                <table class="table table-hover record_properties">
+                    <tbody>
+                        <tr>
+                            <th scope="row">{{'Id'|trans({}, 'TimeLog')}}</th>
+                            <td>{{ timelog.id }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">{{'Hours'|trans({}, 'TimeLog')}}</th>
+                            <td>{{ timelog.hours }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">{{'Description'|trans({}, 'TimeLog')}}</th>
+                            <td>{{ timelog.description }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">{{'Spenton'|trans({}, 'TimeLog')}}</th>
+                            <td>{{ timelog.spentOn|date('fullDateTime'|trans) }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">{{'Createdon'|trans({}, 'TimeLog')}}</th>
+                            <td>{{ timelog.createdOn|date('fullDateTime'|trans) }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">{{'Updatedon'|trans({}, 'TimeLog')}}</th>
+                            <td>{{ timelog.updatedOn|date('fullDateTime'|trans) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box-footer">
+            {{ form_start(delete_form) }}
+        {{ form_widget(delete_form) }}
+
+        <div class="btn-group record_actions">
+
+            <a class="btn btn-primary" href="{{ path('timelog_edit', {id: timelog.id}) }}">
+                <i class="fa fa-edit"></i> {{ 'Edit'|trans({}, 'TimeLog') }}
+            </a>
+            <button class="btn btn-danger" type="submit"><i class="fa fa-trash-o"></i> {{ 'Delete'|trans({}, 'TimeLog') }}</button>
+
+        </div>
+
+        <input name="modal" type="hidden" value="0">
+    {{ form_end(delete_form) }}
+
+    <div id="delete_confirm" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>{{ 'Confirm delete'|trans({}, 'TimeLog') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'You are about to delete an item'|trans({}, 'TimeLog') }}, {{ 'this procedure is irreversible'|trans({}, 'TimeLog') }}.</p>
+                    <p>{{ 'Do you want to proceed?'|trans({}, 'TimeLog') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger">{{ 'Yes'|trans({}, 'TimeLog') }}</button>
+                    <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'TimeLog') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    
+    </section>
+
+{% endblock %}

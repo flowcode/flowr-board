@@ -3,8 +3,10 @@
 namespace Flower\BoardBundle\Model;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
@@ -94,6 +96,11 @@ abstract class Task {
     protected $tracker;
 
     /**
+     * @OneToMany(targetEntity="\Flower\ModelBundle\Entity\Board\TaskAttachment", mappedBy="task")
+     */
+    protected $attachments;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="startDate", type="datetime", nullable=true)
@@ -125,6 +132,7 @@ abstract class Task {
     public function __construct()
     {
         $this->position = 0;
+        $this->attachments = new ArrayCollection();
     }
     /**
      * Get id
@@ -461,5 +469,38 @@ abstract class Task {
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    /**
+     * Add securityGroup
+     *
+     * @param \Flower\ModelBundle\Entity\Board\TaskAttachment $attachment
+     * @return Task
+     */
+    public function addTaskAttachment(\Flower\ModelBundle\Entity\Board\TaskAttachment $attachment)
+    {
+        $this->attachments[] = $attachment;
+
+        return $this;
+    }
+
+    /**
+     * Remove attachments
+     *
+     * @param \Flower\ModelBundle\Entity\Board\TaskAttachment $attachment
+     */
+    public function removeTaskAttachment(\Flower\ModelBundle\Entity\Board\TaskAttachment $attachment)
+    {
+        $this->attachments->removeElement($attachment);
+    }
+
+    /**
+     * Get attachments
+     *
+     * @return Collection
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
     }
 }
