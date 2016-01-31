@@ -17,6 +17,16 @@ abstract class History
 {
 
     const TYPE_TASK = "task";
+    const TYPE_PROJECT = "project";
+    const TYPE_ACCOUNT = "account";
+    const TYPE_CONTACT = "contact";
+    const TYPE_EVENT = "event";
+    const TYPE_CALL_EVENT = "call_event";
+    const TYPE_CAMPAIGN_MAIL = "campaign_mail";
+
+    const CRUD_CREATE = "create";
+    const CRUD_UPDATE = "update";
+    const CRUD_DELETE = "delete";
 
     /**
      * @var integer
@@ -37,14 +47,14 @@ abstract class History
     /**
      * @var string
      *
-     * @ORM\Column(name="enitity_id", type="string", length=255)
+     * @ORM\Column(name="enitity_id", type="string", length=255, nullable=true)
      */
     protected $enitity_id;
     
     /**
      * @var string
      *
-     * @ORM\Column(name="attribute", type="string", length=255)
+     * @ORM\Column(name="attribute", type="string", length=255, nullable=true)
      */
     protected $attribute;
 
@@ -58,9 +68,16 @@ abstract class History
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=255)
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
      */
     protected $value;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="message", type="text", nullable=true)
+     */
+    protected $message;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
@@ -249,5 +266,25 @@ abstract class History
     public function getAttribute()
     {
         return $this->attribute;
+    }
+
+    /**
+     * Set message
+     *
+     * @param string $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * Get message
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 }

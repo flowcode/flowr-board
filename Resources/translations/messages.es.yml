@@ -5,3 +5,27 @@ Assignee: Assignado
 'assignee to': 'assignado a'
 'change status': 'cambiar estado'
 error.delete.task: La tarea no puede ser eliminada ya que contiene horas registradas.
+
+activity.feed.project.create: "Creó el proyecto %project_name%."
+activity.feed.project.update: "Editó información del proyecto %project_name%."
+activity.feed.project.delete: "Elimninó el proyecto %project_name%."
+
+activity.feed.account.create: "Creó la cuenta %account_name%."
+activity.feed.account.update: "Editó información la cuenta %account_name%."
+activity.feed.account.delete: "Elimninó la cuenta %account_name%."
+
+activity.feed.callevent.create: "Creó la llamada %callevent_subject%."
+activity.feed.callevent.update: "Editó información de la llamada %callevent_subject%."
+activity.feed.callevent.delete: "Elimninó la llamada %callevent_subject%."
+
+activity.feed.event.create: "Creó el evento %event_title%."
+activity.feed.event.update: "Editó información del evento %event_title%."
+activity.feed.event.delete: "Elimninó el evento %event_title%."
+
+activity.feed.task.create: "Creó la tarea %task_name%."
+activity.feed.task.update: "Editó información de la tarea %task_name%."
+activity.feed.task.delete: "Elimninó la tarea %task_name%."
+
+activity.feed.campaignmail.create: "Creó la campaña %campaignmail_name%."
+activity.feed.campaignmail.update: "Editó información de la campaña %campaignmail_name%."
+activity.feed.campaignmail.delete: "Elimninó la campaña %campaignmail_name%."

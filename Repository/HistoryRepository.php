@@ -3,6 +3,7 @@
 namespace Flower\BoardBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Flower\ModelBundle\Entity\Board\History;
 
 /**
  * HistoryRepository
@@ -12,5 +13,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class HistoryRepository extends EntityRepository
 {
-    
+    /**
+     * @param History $history
+     * @return History
+     */
+    public function save(History $history){
+        $this->_em->persist($history);
+        $this->_em->flush();
+
+        return $history;
+    }
+
+    /**
+     * @param History $history
+     * @return History
+     */
+    public function update(History $history){
+        $this->_em->flush();
+        return $history;
+    }
+
+
 }

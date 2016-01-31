@@ -1,6 +1,16 @@
 services:
 
+    board.repository.history:
+        class: Doctrine\ORM\EntityRepository
+        factory: [@doctrine.orm.entity_manager, getRepository]
+        arguments:
+            - Flower\ModelBundle\Entity\Board\History
+
     board.service.task:
         class: Flower\BoardBundle\Service\TaskService
         calls:
             - [setContainer, ["@service_container"]]
+
+    board.service.history:
+        class: Flower\BoardBundle\Service\HistoryService
+        arguments: ['@board.repository.history', '@translator']
