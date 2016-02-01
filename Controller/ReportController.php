@@ -37,6 +37,17 @@ class ReportController extends Controller
         /* Addons, agregados para filtrado */
         $groupBy = ["account", "project", "board"];
 
+        /* Select formater */
+        $formaterElem = $request->get("addGroupBy");
+
+        $addOns = false;
+        $sumHours = ' tl.hours as "time_log_hours" ';
+        /* Una opcion no nula en el agregado. */
+        if(count($formaterElem) > 1 || $formaterElem[0] != "") {
+            $sumHours = ' SUM(tl.hours) as "time_log_hours" ';
+            $addOns = true;
+        }
+        
         /* Date Filter */
         $value = null;
         $startDateFilter = $request->get("startDateFilter");
@@ -57,7 +68,7 @@ class ReportController extends Controller
         $addGroupBy=null;
 
         $sql = "";
-        $sql .= 'SELECT a.name as "account", p.name as "project", b.name as "board", t.id as "task_id", t.name as "task_name", t.created as "task_created", tl.hours as "time_log_hours",tl.created_on as "time_log_created"';
+        $sql .= 'SELECT a.name as "account", p.name as "project", b.name as "board", t.id as "task_id", t.name as "task_name", t.created as "task_created", ' . $sumHours .', tl.created_on as "time_log_created" ';
         $sql .= 'FROM  ';
         $sql .= 'time_log tl,  ';
         $sql .= 'task t, ';
@@ -73,17 +84,16 @@ class ReportController extends Controller
         $sql .= 'AND a.id = p.account_id ';
         $sql .= $startDateSQL;
         $sql .= $endDateSQL;
-        //echo $sql;
 
-        /* Select formater */
-        $formaterElem = $request->get("addGroupBy");
+        
         /* Solo se agrega cuando se elige por lo menos una opcion no nula. */
-        if(count($formaterElem) > 1 || $formaterElem[0] != ""){
+        if($addOns) {
             /* Filtro por si se agrego la opcion vacio. */
             $var = array_filter($request->get("addGroupBy"));
             $var = implode(', ', $var);
             $sql .= "GROUP BY ". $var;
         }
+        //echo $sql;
 
         $results = $conn->fetchAll($sql);
 
@@ -101,14 +111,33 @@ class ReportController extends Controller
 
     private function getSelect($groupBy)
     {
-        $select = "";
+        $select = 'SELECT ';
+        $account = ' a.name as "account" ';
+        $project = ' p.name as "project" ';
+        $board = ' b.name as "board" ';
+        $rest = ' t.id as "task_id", t.name as "task_name", t.created as "task_created", tl.hours as "time_log_hours",tl.created_on as "time_log_created" ';
+        $sumHours = ', SUM(tl.hours) as "time_log_hours" ';
+ 
 
-        foreach ($groupBy as $value) {
-            if($value == "account"){
-
-            } elseif($value == "project"){
+        if(count($groupBy) == 1 && $groupBy[0] == null) {
+            $select .= $account;
+            $select .= $project;
+            $select .= $board;
+            $select .= $rest;
+        } else {
+            if(in_array("account", $groupBy)) {
+                $select .= $account;
             }
+            if(in_array("project", $groupBy)) {
+                $select .= $project;
+            }
+            if(in_array("board", $groupBy)) {
+                $select .= $board;
+            }
+            $select .= $sumHours;
         }
+        echo $select;
+        die("   dsa");
     }
 
     private function addFilter($qb, $filter, $field)
