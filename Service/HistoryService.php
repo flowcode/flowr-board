@@ -6,6 +6,7 @@ namespace Flower\BoardBundle\Service;
 use Doctrine\ORM\EntityRepository;
 use Flower\ModelBundle\Entity\Board\History;
 use Flower\ModelBundle\Entity\User\User;
+use Flower\UserBundle\Service\SecurityGroupService;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -14,24 +15,29 @@ class HistoryService
 
     private $historyRepository;
     private $translator;
+    private $securityGroupService;
 
-    public function __construct(EntityRepository $historyRepository, TranslatorInterface $translator)
+    public function __construct(EntityRepository $historyRepository, TranslatorInterface $translator, SecurityGroupService $securityGroupService)
     {
         $this->historyRepository = $historyRepository;
         $this->translator = $translator;
+        $this->securityGroupService = $securityGroupService;
     }
 
     /**
+     * @param User $currentUser
      * @param User $user
      * @param null $type
      * @param null $entity
      * @param int $page
      * @return array
      */
-    public function getUserActivity(User $user = null, $type = null, $entity = null, $page = 1)
+    public function getUserActivity(User $currentUser, User $user = null, $type = null, $entity = null, $page = 1)
     {
         $qb = $this->historyRepository->createQueryBuilder('h');
 
+        $userAlias = "hu";
+        $qb->join("h.user", $userAlias);
         if($user){
             $qb->where('h.user = :user_id')->setParameter("user_id", $user->getId());
         }
@@ -39,6 +45,9 @@ class HistoryService
         if (!is_null($type)) {
             $qb->andWhere('h.type = :type')->setParameter("type", $type);
         }
+
+        $qb = $this->securityGroupService->addLowerSecurityGroupsFilter($qb, $currentUser, $userAlias);
+
 
         $qb->orderBy('h.changedOn','DESC');
 
