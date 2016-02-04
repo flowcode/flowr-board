@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Flower\ModelBundle\Entity\Board\History;
 use Flower\ModelBundle\Entity\User\User;
 use Flower\UserBundle\Service\SecurityGroupService;
+use Flower\UserBundle\Service\OrgPositionService;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -17,10 +18,11 @@ class HistoryService
     private $translator;
     private $securityGroupService;
 
-    public function __construct(EntityRepository $historyRepository, TranslatorInterface $translator, SecurityGroupService $securityGroupService)
+    public function __construct(EntityRepository $historyRepository, TranslatorInterface $translator, SecurityGroupService $securityGroupService, OrgPositionService $orgPositionService)
     {
         $this->historyRepository = $historyRepository;
         $this->translator = $translator;
+        $this->orgPositionService = $orgPositionService;
         $this->securityGroupService = $securityGroupService;
     }
 
@@ -47,6 +49,7 @@ class HistoryService
         }
 
         $qb = $this->securityGroupService->addLowerSecurityGroupsFilter($qb, $currentUser, $userAlias);
+        $qb = $this->orgPositionService->addPositionFilter($qb, $currentUser, $userAlias);
 
 
         $qb->orderBy('h.changedOn','DESC');
