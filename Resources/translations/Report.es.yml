@@ -1,0 +1,40 @@
+'%entity%': 'Reporte'
+'%entity% creation': 'Creación de Reporte'
+'%entity% edit': 'Edición de Reporte'
+'%entity% list': 'Lista de Reportes'
+Active: Activo
+Board: Tableros
+Closed: Cerrado
+'Confirm delete': 'Confirmar borrado'
+Create: Crear
+'Create a new %entity%': 'Crear nuevo Tablero'
+Created: Creado
+Dashboard: Dashboard
+Delete: Borrar
+Description: Descripción
+'Do you want to proceed?': '¿Desea continuar de todos modos?'
+Edit: Editar
+Id: Id
+Name: Nombre
+'No': 'No'
+Startdate: 'Fecha de inicio'
+Status: Estado
+Updated: Actualizado
+closed: cerrado
+edit: editar
+open: abierto
+Report: Reporte
+report: Reporte
+Account: Cuenta
+account: Cuenta
+Project: Proyecto
+project: Proyecto
+Board: Tablero
+board: Tablero
+task_id: "#Tarea"
+task_name: "Nombre de Tarea"
+task_created: "Creación de tarea"
+time_log_hours: "Horas logeadas"
+time_log_created: "Creación de logeo"
+"Total Hours": "Total de horas"
+"add ons": "add ons"

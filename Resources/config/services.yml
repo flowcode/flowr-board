@@ -14,3 +14,8 @@ services:
     board.service.history:
         class: Flower\BoardBundle\Service\HistoryService
         arguments: ['@board.repository.history', '@translator', '@user.service.securitygroup']
+
+    board.service.report:
+        class: Flower\BoardBundle\Service\ReportService
+        calls:
+            - [setContainer, ["@service_container"]]

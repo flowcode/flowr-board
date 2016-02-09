@@ -33,6 +33,7 @@ class ReportController extends Controller
         $conn = $this->get('database_connection');
         $translator = $this->get('translator');
         $dateformat = $translator->trans('fullDateTime');
+        $addGroupBy=null;
 
         /* Addons, agregados para filtrado */
         $groupBy = ["account", "project", "board"];
@@ -40,60 +41,15 @@ class ReportController extends Controller
         /* Select formater */
         $formaterElem = $request->get("addGroupBy");
 
-        $addOns = false;
-        $sumHours = ' tl.hours as "time_log_hours" ';
-        /* Una opcion no nula en el agregado. */
-        if(count($formaterElem) > 1 || $formaterElem[0] != "") {
-            $sumHours = ' SUM(tl.hours) as "time_log_hours" ';
-            $addOns = true;
-        }
-        
         /* Date Filter */
-        $value = null;
         $startDateFilter = $request->get("startDateFilter");
-        $startDateSQL = "";
-        if($startDateFilter && $startDateFilter != ""){
-            $startDateFilter = \DateTime::createFromFormat($dateformat, $startDateFilter);
-            $value = $startDateFilter->format('Y-m-d H:i:s');
-            $startDateSQL = 'AND tl.spent_on >= "'. $value. '" ';
-        }
         $endDateFilter = $request->get("endDateFilter");
-        $endDateSQL = "";
-        if($endDateFilter && $endDateFilter != ""){
-            $endDateFilter = \DateTime::createFromFormat($dateformat, $endDateFilter);
-            $value = $endDateFilter->format('Y-m-d H:i:s');
-            $endDateSQL = 'AND tl.spent_on <= "'. $value. '" ';
-        }
+        $dates = $this->get('board.service.report')->dateFilter($dateformat, $startDateFilter, $endDateFilter);
 
-        $addGroupBy=null;
-
-        $sql = "";
-        $sql .= 'SELECT a.name as "account", p.name as "project", b.name as "board", t.id as "task_id", t.name as "task_name", t.created as "task_created", ' . $sumHours .', tl.created_on as "time_log_created" ';
-        $sql .= 'FROM  ';
-        $sql .= 'time_log tl,  ';
-        $sql .= 'task t, ';
-        $sql .= 'board b, ';
-        $sql .= 'project p, ';
-        $sql .= 'account a, ';
-        $sql .= 'project_boards pb ';
-        $sql .= 'WHERE 1=1 ';
-        $sql .= 'AND tl.task_id = t.id ';
-        $sql .= 'AND t.board_id = b.id ';
-        $sql .= 'AND b.id = pb.board_id ';
-        $sql .= 'AND p.id = pb.project_id ';
-        $sql .= 'AND a.id = p.account_id ';
-        $sql .= $startDateSQL;
-        $sql .= $endDateSQL;
-
-        
-        /* Solo se agrega cuando se elige por lo menos una opcion no nula. */
-        if($addOns) {
-            /* Filtro por si se agrego la opcion vacio. */
-            $var = array_filter($request->get("addGroupBy"));
-            $var = implode(', ', $var);
-            $sql .= "GROUP BY ". $var;
-        }
-        //echo $sql;
+        /* SQL Builder */
+        $value = $this->get('board.service.report')->getSQLQuery($formaterElem, $dates);
+        $tableHeader = $value["tableHeader"];
+        $sql = $value["sql"];
 
         $results = $conn->fetchAll($sql);
 
@@ -104,40 +60,10 @@ class ReportController extends Controller
             'totalHours' => $totalHours,
             'addGroupBy' => $addGroupBy,
             'groupBy' => $groupBy,
+            'tableHeader' => $tableHeader,
             'startDateFilter' => isset($filters['startDateFilter'])?$filters['startDateFilter']["value"] : null,
             'endDateFilter' => isset($filters['endDateFilter'])?$filters['endDateFilter']["value"] : null,
         );
-    }
-
-    private function getSelect($groupBy)
-    {
-        $select = 'SELECT ';
-        $account = ' a.name as "account" ';
-        $project = ' p.name as "project" ';
-        $board = ' b.name as "board" ';
-        $rest = ' t.id as "task_id", t.name as "task_name", t.created as "task_created", tl.hours as "time_log_hours",tl.created_on as "time_log_created" ';
-        $sumHours = ', SUM(tl.hours) as "time_log_hours" ';
- 
-
-        if(count($groupBy) == 1 && $groupBy[0] == null) {
-            $select .= $account;
-            $select .= $project;
-            $select .= $board;
-            $select .= $rest;
-        } else {
-            if(in_array("account", $groupBy)) {
-                $select .= $account;
-            }
-            if(in_array("project", $groupBy)) {
-                $select .= $project;
-            }
-            if(in_array("board", $groupBy)) {
-                $select .= $board;
-            }
-            $select .= $sumHours;
-        }
-        echo $select;
-        die("   dsa");
     }
 
     private function addFilter($qb, $filter, $field)
