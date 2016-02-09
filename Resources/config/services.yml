@@ -13,7 +13,7 @@ services:
 
     board.service.history:
         class: Flower\BoardBundle\Service\HistoryService
-        arguments: ['@board.repository.history', '@translator', '@user.service.securitygroup']
+        arguments: ['@board.repository.history', '@translator', '@user.service.securitygroup', '@user.service.orgposition', '@router']
 
     board.service.report:
         class: Flower\BoardBundle\Service\ReportService
