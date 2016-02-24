@@ -52,8 +52,7 @@ class HistoryService
         }
 
         $qb = $this->securityGroupService->addLowerSecurityGroupsFilter($qb, $currentUser, $userAlias);
-        $qb = $this->orgPositionService->addPositionFilter($qb, $currentUser, $userAlias);
-
+        //$qb = $this->orgPositionService->addPositionFilter($qb, $currentUser, $userAlias);
 
         $qb->orderBy('h.changedOn', 'DESC');
 
