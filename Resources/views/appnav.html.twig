@@ -1,29 +1,32 @@
-		<div class="nav-app">
-            <ul class="nav nav-tabs ">
-                <li role="presentation" class="app-icon">
-                    <img src="{{ asset('bundles/flowercore/images/icons/Todo-List-100.png') }}" class="img-responsive">
-                </li>
-                <li role="presentation" 
-                {% if app_board is defined %}class="active"{% endif %}
-                >
-                    <a href="{{ path('board') }}">{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</a>
-                </li>
-                {% if board is defined %}
-                    <li role="presentation" 
-                    {% if app_board_kamban is defined %}class="active"{% endif %}
-                    >
-                        <a href="{{ path('board_task_kanban',{"id":board.id}) }}">{{ 'Kanban view'|trans }}</a>
-                    </li>
-                    <li role="presentation" 
-                    {% if app_board_list is defined and board is defined %}class="active"{% endif %}
-                    >
-                        <a href="{{ path('board_task_list',{"id":board.id}) }}">{{ 'List view'|trans }}</a>
-                    </li>
-                    {% if task is defined and task.id %}
-                        <li role="presentation" class="active">
-                            <a href="{{ path('task_show',{"id":task.id}) }}">{{ 'Task'|trans({},'Task') }}</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
-            </ul>
+<section class="sidebar">
+    <div class="app-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <img src="{{ asset('bundles/flowercore/images/icons/Todo-List-100.png') }}"
+                     class="img-responsive pull-left" width="40">
+                <span>{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</span>
+            </div>
         </div>
+    </div>
+    <ul class="sidebar-menu">
+
+        <li {% if app_board is defined %}class="active"{% endif %}>
+            <a href="{{ path('board') }}">{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</a>
+        </li>
+
+        {% if board is defined %}
+            <li {% if app_board_kamban is defined %}class="active"{% endif %}>
+                <a href="{{ path('board_task_kanban',{"id":board.id}) }}">{{ 'Kanban view'|trans }}</a>
+            </li>
+            <li {% if app_board_list is defined and board is defined %}class="active"{% endif %}>
+                <a href="{{ path('board_task_list',{"id":board.id}) }}">{{ 'List view'|trans }}</a>
+            </li>
+            {% if task is defined and task.id %}
+                <li class="active">
+                    <a href="{{ path('task_show',{"id":task.id}) }}">{{ 'Task'|trans({},'Task') }}</a>
+                </li>
+            {% endif %}
+        {% endif %}
+
+    </ul>
+</section>

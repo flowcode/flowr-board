@@ -2,9 +2,15 @@
 
 {% block title %}{{ '%entity% edit'|trans({'%entity%': 'Board'}, 'Board') }} - {{ parent() }}{% endblock %}
 
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board_kamban': true, 'board':board }) }}
+{% endblock %}
+
 {% block body %}
+    <section class="content-header">
+        <h1>{{ 'Kanban view'|trans }}</h1>
+    </section>
     <section class="content">
-        {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board_kamban': true, 'board':board }) }} 
         <div class="box">
             <div class="box-header">
                 <div class="box-tools  pull-right">

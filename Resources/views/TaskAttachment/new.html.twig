@@ -2,31 +2,37 @@
 
 {% block title %}{{ '%entity% creation'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }} - {{ parent() }}{% endblock %}
 
-{% block body %}  
+{% block app_menu %}
+    {% if task is defined %}
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': task.board,'task':task }) }}
+    {% else %}
+        {{ include("FlowerBoardBundle::appnav.html.twig", {  }) }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>{{ '%entity% creation'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</h1>
+    </section>
     <section class="content">
-        {% if task is defined %}
-            {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': task.board,'task':task }) }} 
-        {% else %}
-            {{ include("FlowerBoardBundle::appnav.html.twig", {  }) }} 
-        {% endif %}
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">{{ '%entity% creation'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</h3>
+                <h3 class="box-title"></h3>
             </div>
             <div class="box-body">
                 {{ form_start(form, {action: path('taskAttachment_create')}) }}
-                    {{ form_widget(form) }}
-                    <p>
-                        <button class="btn btn-primary" type="submit">{{ 'Create'|trans({}, 'TimeLog') }}</button>
-                    </p>
+                {{ form_widget(form) }}
+                <p>
+                    <button class="btn btn-primary" type="submit">{{ 'Create'|trans({}, 'TimeLog') }}</button>
+                </p>
                 {{ form_end(form) }}
             </div>
             <div class="box-footer">
-                        
-        <div class="btn-group record_actions">
+
+                <div class="btn-group record_actions">
 
 
-        </div>
+                </div>
 
             </div>
         </div>

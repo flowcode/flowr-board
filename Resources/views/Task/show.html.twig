@@ -2,18 +2,24 @@
 
 {% block title %}Task - {{ parent() }}{% endblock %}
 
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig", { 'board':task.board }) }}
+{% endblock %}
+
 {% block body %}
-    <section class="content">    
-        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board':task.board }) }} 
+    <section class="content-header">
+        <h1>#{{ task.id }} {{ task.name|title }}</h1>
+    </section>
+    <section class="content">
         <div class="box" id="showTaks">
             <div class="box-header">
-                <h3 class="box-title">#{{task.id}} {{ task.name|capitalize}}</h3>
+                <h3 class="box-title"></h3>
                 <div class="box-tools pull-right">
                     {{ form_start(delete_form) }}
                     {{ form_widget(delete_form) }}
                     <div class="btn-group record_actions">
                         <a class="btn btn-link  btn-sm" href="{{ path('task_timelog_new', { 'id' : task.id }) }}">
-                            <i class="fa fa-clock-o"></i> {{'log time'|trans({},'Task')|capitalize}}
+                            <i class="fa fa-clock-o"></i> {{ 'log time'|trans({},'Task')|title }}
                         </a>
                         <button class="btn btn-link  btn-sm" type="submit">{{ 'Delete'|trans({}, 'Task') }}</button>
                         <a class="btn btn-link  btn-sm" onclick="showEdit(true)">
@@ -26,16 +32,19 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
                                     <h3>{{ 'Confirm delete'|trans({}, 'Task') }}</h3>
                                 </div>
                                 <div class="modal-body">
-                                    <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}, {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
+                                    <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}
+                                        , {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
                                     <p>{{ 'Do you want to proceed?'|trans({}, 'Task') }}</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Task') }}</button>
-                                    <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
+                                    <button class="btn btn-default"
+                                            data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -46,36 +55,36 @@
                 <p>
                     <span>{{ 'Added by'|trans }}</span>
                     <a href="">{{ task.creator }}</a>,
-                    {{'updated on'|trans({},'Task')}} {{ task.updated|date('fullDateTime'|trans) }}.
+                    {{ 'updated on'|trans({},'Task') }} {{ task.updated|date('fullDateTime'|trans) }}.
                 </p>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-sm-2" >{{ 'Assignee'|trans }}</label>
+                            <label class="col-sm-2">{{ 'Assignee'|trans }}</label>
                             {{ task.assignee }}
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2">{{'Status'|trans({}, 'Task')}}</label>
+                            <label class="col-sm-2">{{ 'Status'|trans({}, 'Task') }}</label>
                             {{ task.status|upper }}
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-sm-2">{{'Created'|trans({}, 'Task')}}</label>
+                            <label class="col-sm-2">{{ 'Created'|trans({}, 'Task') }}</label>
                             {{ task.created|date('fullDateTime'|trans) }}
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2">{{'Duedate'|trans({}, 'Task')}}</label>
+                            <label class="col-sm-2">{{ 'Duedate'|trans({}, 'Task') }}</label>
                             {{ task.dueDate|date('fullDateTime'|trans) }}
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-sm-3">{{'Estimated'|trans({}, 'Task')}}(Hrs)</label>
-                            {{ task.estimated + 0}}
+                            <label class="col-sm-3">{{ 'Estimated'|trans({}, 'Task') }}(Hrs)</label>
+                            {{ task.estimated + 0 }}
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3">{{'Spent'|trans({}, 'Task')}}(Hrs)</label>
+                            <label class="col-sm-3">{{ 'Spent'|trans({}, 'Task') }}(Hrs)</label>
                             {{ spent }}
                         </div>
                     </div>
@@ -91,11 +100,12 @@
 
                                 <ul class="list-unstyled">
                                     {% for taskAttachment in task.attachments %}
-                                    <li>
-                                        <a href="{{ asset(taskAttachment.path) }}" target="_blank" class="btn btn-link btn-xs">
-                                            {{ taskAttachment.name|title }}
-                                        </a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ asset(taskAttachment.path) }}" target="_blank"
+                                               class="btn btn-link btn-xs">
+                                                {{ taskAttachment.name|title }}
+                                            </a>
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -105,7 +115,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12">
-                        <label>{{'Description'|trans({}, 'Task')}}</label>
+                        <label>{{ 'Description'|trans({}, 'Task') }}</label>
                         {{ task.description|raw }}
                     </div>
                 </div>
@@ -114,18 +124,18 @@
 
             </div>
         </div>
-        <div class="box" id="editFormTask"  style="display: none;">
+        <div class="box" id="editFormTask" style="display: none;">
             <div class="box-header">
                 <div class="box-tools">
                     <div class="btn-group record_actions">
                         <a class="btn btn-link  btn-sm" onclick="showEdit(false)">
-                        {{ 'Cancel'|trans({}, 'Account') }}
+                            {{ 'Cancel'|trans({}, 'Account') }}
                         </a>
                     </div>
                 </div>
             </div>
             <div class="box-body">
-                    
+
                 {{ form_start(edit_form) }}
                 <div class="col-sm-6" style="margin-right: 50%;">
                     {{ form_row(edit_form.name) }}
@@ -164,16 +174,19 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
                                 <h3>{{ 'Confirm delete'|trans({}, 'Task') }}</h3>
                             </div>
                             <div class="modal-body">
-                                <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}, {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
+                                <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}
+                                    , {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
                                 <p>{{ 'Do you want to proceed?'|trans({}, 'Task') }}</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Task') }}</button>
-                                <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
+                                <button class="btn btn-default"
+                                        data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
                             </div>
                         </div>
                     </div>
@@ -184,7 +197,7 @@
             <div class="col-sm-6">
                 <div class="box box-solid collapsed-box">
                     <div class="box-header">
-                        <h4 class="box-title">{{'activity' | trans({},'Task') | capitalize}}</h4>
+                        <h4 class="box-title">{{ 'activity' | trans({},'Task') | capitalize }}</h4>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                         </div>
@@ -216,8 +229,10 @@
                                     <!-- timeline icon -->
                                     <i class="fa fa-tag bg-blue"></i>
                                     <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> {{ entry.changedOn|date('H:i') }}</span>
-                                        <h3 class="timeline-header"><a href="#">{{ entry.user|capitalize }}</a> Change {{ entry.attribute }}</h3>
+                                        <span class="time"><i
+                                                    class="fa fa-clock-o"></i> {{ entry.changedOn|date('H:i') }}</span>
+                                        <h3 class="timeline-header"><a href="#">{{ entry.user|capitalize }}</a>
+                                            Change {{ entry.attribute }}</h3>
                                         <div class="timeline-body">
                                             Set {{ entry.attribute }} to {{ entry.value }}
                                         </div>
@@ -233,7 +248,7 @@
             <div class="col-sm-6">
                 <div class="box box-solid collapsed-box">
                     <div class="box-header">
-                        <h4 class="box-title">{{'logs'| trans({},'Task')| capitalize}}</h4>
+                        <h4 class="box-title">{{ 'logs'| trans({},'Task')| capitalize }}</h4>
                         <div class="box-tools">
                             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                         </div>
@@ -266,7 +281,8 @@
                                     <i class="fa fa-tag bg-blue"></i>
                                     <div class="timeline-item">
                                         <span class="time"><i class="fa fa-clock-o"></i> {{ entry.spentOn|date('H:i') }}</span>
-                                        <h3 class="timeline-header">{{ entry.user|capitalize }} Spent {{ entry.hours }} Hrs</h3>
+                                        <h3 class="timeline-header">{{ entry.user|capitalize }} Spent {{ entry.hours }}
+                                            Hrs</h3>
                                         <div class="timeline-body">
                                             {{ entry.description }}
                                         </div>
@@ -287,15 +303,15 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        function showEdit(show){
-            if(show){
+        function showEdit(show) {
+            if (show) {
                 $("#showTaks").hide();
                 $("#editFormTask").show();
-            }else{
+            } else {
                 $("#showTaks").show();
                 $("#editFormTask").hide();
             }
         }
-        
+
     </script>
 {% endblock %}

@@ -2,14 +2,18 @@
 
 {% block title %}{{ '%entity% edit'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }} - {{ parent() }}{% endblock %}
 
+{% block app_menu %}
+    {% if task is defined %}
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': task.board,'task':task }) }}
+    {% else %}
+        {{ include("FlowerBoardBundle::appnav.html.twig", {  }) }}
+    {% endif %}
+{% endblock %}
+
 {% block body %}
+
     <section class="content-header">
         <h1>{{ 'TimeLog' | trans({}, 'TimeLog')}}</h1>
-        <ol class="breadcrumb">
-            <li><a href={{ path('dashboard') }}><i class="fa fa-dashboard"></i> {{"Dashboard" | trans({}, 'TimeLog')}}</a></li>
-            <li><a href="{{ path('timelog') }}"> {{ '%entity% list'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</a></li>
-            <li class="active" >{{ '%entity% edit'|trans({'%entity%': 'TimeLog'}, 'TimeLog') }}</li>
-        </ol>
     </section>    
     <section class="content">
         <div class="box">

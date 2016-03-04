@@ -18,6 +18,10 @@
 
 {% from _self import thead %}
 
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board_list': true }) }}
+{% endblock %}
+
 
 {% block body %}
     <section class="content-header">

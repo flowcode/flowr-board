@@ -2,13 +2,20 @@
 
 {% block title %}Board - {{ parent() }}{% endblock %}
 
+
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig", { 'board':board }) }}
+{% endblock %}
+
+
 {% block body %}
-    <section class="content">    
-        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board':board }) }} 
+    <section class="content-header">
+        <h1>{{ board.name|title }}</h1>
+    </section>
+    <section class="content">
         <div class="box"  id='showBoard'>
             <div class="box-header">
-
-                <h3 class="box-title">{{ board.name | capitalize}}</h3>
+                <h3 class="box-title"></h3>
                 <div class="box-tools  pull-right">
                     {{ form_start(delete_form) }}
                     {{ form_widget(delete_form) }}
