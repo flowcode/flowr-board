@@ -2,6 +2,10 @@
 
 {% block title %}{{ '%entity% edit'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
 
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig", { 'app_board_kamban': true, 'board':board }) }}
+{% endblock %}
+
 {% block body %}
     <section class="content-header">
         <h1>

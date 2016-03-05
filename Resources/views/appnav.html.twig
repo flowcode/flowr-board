@@ -14,7 +14,7 @@
             <a href="{{ path('board') }}">{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</a>
         </li>
 
-        {% if board is defined %}
+        {% if board is defined and board.id is not null %}
             <li {% if app_board_kamban is defined %}class="active"{% endif %}>
                 <a href="{{ path('board_task_kanban',{"id":board.id}) }}">{{ 'Kanban view'|trans }}</a>
             </li>

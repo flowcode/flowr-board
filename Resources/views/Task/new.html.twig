@@ -2,12 +2,21 @@
 
 {% block title %}{{ '%entity% creation'|trans({'%entity%': 'Task'}, 'Task') }} - {{ parent() }}{% endblock %}
 
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': board }) }}
+{% endblock %}
+
 {% block body %}
+    <section class="content-header">
+        <h1>
+            {{ '%entity% creation'|trans({'%entity%': 'Task'}, 'Task') }}
+        </h1>
+    </section>
     <section class="content">
-        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': board }) }} 
+
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">{{ '%entity% creation'|trans({'%entity%': 'Task'}, 'Task') }}</h3>
+                <h3 class="box-title"></h3>
             </div>
             <div class="box-body">
                 {{ form_start(form, {action: path('task_create', {"id": board.id})}) }}
