@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Flower\ModelBundle\Entity\Board\Board;
 use Flower\CoreBundle\Form\Type\BoardType;
 use Doctrine\ORM\QueryBuilder;
+
 /**
  * Board controller.
  *
@@ -53,7 +54,7 @@ class BoardController extends Controller
 
         return array(
             'board' => $board,
-            'edit_form'   => $editForm->createView(),
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -67,49 +68,36 @@ class BoardController extends Controller
      */
     public function tasksKanbanAction(Board $board)
     {
-        $em = $this->getDoctrine()->getManager();
-        $projStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
-        $taskRepo = $em->getRepository("FlowerModelBundle:Board\Task");
-
-        $tasks = array();
-
-        foreach ($projStatuses as $projStatus) {
-            $status = array();
-            $status["entity"] = $projStatus;
-            $status["tasks"] = $taskRepo->findByStatusByPos($projStatus->getId(), $board->getId());
-            $tasks[] = $status;
-        }
-        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($board);
-        $opportunity = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Opportunity")->findByBoard($board);
-        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($board);
         return array(
-            'board_opportunity' => $opportunity,
-            'board_project' => $project,
-            'board_account' => $account,
+            'board_opportunity' => null,
+            'board_project' => null,
+            'board_account' => null,
             'board' => $board,
-            'tasks' => $tasks,
         );
     }
-    private function addFilter($qb, $filter, $field){
-        if($filter && count($filter) > 0){    
-            if( implode(",", $filter) != ""){
+
+    private function addFilter($qb, $filter, $field)
+    {
+        if ($filter && count($filter) > 0) {
+            if (implode(",", $filter) != "") {
                 $filterAux = array();
                 $nullFilter = "";
                 foreach ($filter as $element) {
-                    if($element == "-1"){
-                        $nullFilter = " OR  (".$field." is NULL)";
-                    }else{
+                    if ($element == "-1") {
+                        $nullFilter = " OR  (" . $field . " is NULL)";
+                    } else {
                         $filterAux[] = $element;
                     }
                 }
-                if(count($filterAux) > 0){
-                    $qb->andWhere(" ( ".$field." in (:".str_replace(".","_",$field)."_param) ".$nullFilter." )")->setParameter(str_replace(".","_",$field)."_param", $filterAux);
-                }else{
-                    $qb->andWhere(" ( 1 = 2 ".$nullFilter." )");
+                if (count($filterAux) > 0) {
+                    $qb->andWhere(" ( " . $field . " in (:" . str_replace(".", "_", $field) . "_param) " . $nullFilter . " )")->setParameter(str_replace(".", "_", $field) . "_param", $filterAux);
+                } else {
+                    $qb->andWhere(" ( 1 = 2 " . $nullFilter . " )");
                 }
             }
         }
     }
+
     /**
      * Lists all Board entities.
      *
@@ -122,15 +110,16 @@ class BoardController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->getRepository('FlowerModelBundle:Board\Task')->createQueryBuilder('t');
-        $qb->join("t.status","s");
+        $qb->join("t.status", "s");
+
         $qb->where("t.board = :board")->setParameter("board", $board->getId());
 
         $this->addQueryBuilderSort($qb, 'board');
         $statusFilter = $request->query->get('statusFilter');
-        $this->addFilter($qb,$statusFilter,"t.status");
+        $this->addFilter($qb, $statusFilter, "t.status");
         $assigneeFilter = $request->query->get('assigneeFilter');
-        $this->addFilter($qb,$assigneeFilter,"t.assignee");
-        
+        $this->addFilter($qb, $assigneeFilter, "t.assignee");
+
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
         $statuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->findAll();
         $users = $em->getRepository('FlowerModelBundle:User\User')->findAll();
@@ -168,10 +157,9 @@ class BoardController extends Controller
 
         return array(
             'board' => $board,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
-
 
 
     /**
@@ -198,7 +186,7 @@ class BoardController extends Controller
 
         return array(
             'board' => $board,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -219,7 +207,7 @@ class BoardController extends Controller
 
         return array(
             'board' => $board,
-            'edit_form'   => $editForm->createView(),
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -246,7 +234,7 @@ class BoardController extends Controller
 
         return array(
             'board' => $board,
-            'edit_form'   => $editForm->createView(),
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -272,8 +260,8 @@ class BoardController extends Controller
     /**
      * Create Delete form
      *
-     * @param integer                       $id
-     * @param string                        $route
+     * @param integer $id
+     * @param string $route
      * @return \Symfony\Component\Form\Form
      */
     protected function createDeleteForm($id, $route)
@@ -281,8 +269,7 @@ class BoardController extends Controller
         return $this->createFormBuilder(null, array('attr' => array('id' => 'delete')))
             ->setAction($this->generateUrl($route, array('id' => $id)))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 
     /**
@@ -294,13 +281,13 @@ class BoardController extends Controller
     {
         $this->setOrder('board', $field, $type);
 
-        return $this->redirect($this->generateUrl('board_task_list',array("id" => $board->getId())));
+        return $this->redirect($this->generateUrl('board_task_list', array("id" => $board->getId())));
     }
 
     /**
-     * @param string $name  session name
+     * @param string $name session name
      * @param string $field field name
-     * @param string $type  sort type ("ASC"/"DESC")
+     * @param string $type sort type ("ASC"/"DESC")
      */
     protected function setOrder($name, $field, $type = 'ASC')
     {
@@ -320,17 +307,17 @@ class BoardController extends Controller
 
     /**
      * @param QueryBuilder $qb
-     * @param string       $name
+     * @param string $name
      */
     protected function addQueryBuilderSort(QueryBuilder $qb, $name)
     {
         $alias = current($qb->getDQLPart('from'))->getAlias();
         if (is_array($order = $this->getOrder($name))) {
-            if (strpos($order['field'], '.') !== FALSE){
+            if (strpos($order['field'], '.') !== FALSE) {
                 $qb->orderBy($order['field'], $order['type']);
-            }else{
+            } else {
                 $qb->orderBy($alias . '.' . $order['field'], $order['type']);
-            }            
+            }
         }
     }
 

@@ -1,21 +1,11 @@
 <div>
     <small>
-        {% if board_account %}
-	            <a href="{{ path('account_show', { 'id': board_account.id }) }}">{{ board_account|capitalize }}</a>
-        {% endif %}
-        {% if board_opportunity %}
-	        {% if board_opportunity.account and not board_account %}
-	            <a href="{{ path('account_show', { 'id': board_opportunity.account.id }) }}">{{ board_opportunity.account|capitalize }}</a>
-	        {% endif %}
-	        <i class="fa fa-angle-right"></i>
-	        <a href="{{ path('opportunity_show', { 'id': board_opportunity.id }) }}">{{ board_opportunity.name|capitalize }}</a>
-        {% endif %}
-    	{% if board_project %}
-	        {% if board_project.account and not board_account and not board_opportunity%}
-	            <a href="{{ path('account_show', { 'id': board_project.account.id }) }}">{{ board_project.account|capitalize }}</a>
-	        {% endif %}
-	        <i class="fa fa-angle-right"></i>
-	        <a href="{{ path('project_show', { 'id': board_project.id }) }}">{{ board_project|capitalize }}</a>
+        {% if board.projectIteration %}
+            {% if board.projectIteration.project.account %}
+                <a href="{{ path('account_show', { 'id': board.projectIteration.project.account.id }) }}">{{ board.projectIteration.project.account|capitalize }}</a>
+                <i class="fa fa-angle-right"></i>
+            {% endif %}
+            <a href="{{ path('project_iteration_show', { 'id': board.projectIteration.id }) }}">{{ board.projectIteration|capitalize }}</a>
         {% endif %}
     </small>
 </div>

@@ -4,7 +4,7 @@
 
 {% block app_menu %}
     {% if task is defined %}
-        {{ include("FlowerBoardBundle::appnav.html.twig", { 'board': task.board,'task':task }) }}
+        {{ include("FlowerBoardBundle::appnav.html.twig", { 'task':task }) }}
     {% else %}
         {{ include("FlowerBoardBundle::appnav.html.twig", {  }) }}
     {% endif %}

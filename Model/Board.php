@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation\Groups;
  * Board
  *
  */
-abstract  class Board
+abstract class Board
 {
     /**
      * @var integer
@@ -49,25 +49,19 @@ abstract  class Board
      */
     protected $status;
 
-
     /**
-     * @OneToMany(targetEntity="Flower\ModelBundle\Entity\Board\Task", mappedBy="board")
-     * */
-    protected $tasks;
-
-    /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="startDate", type="datetime", nullable=true))
+     * @ORM\Column(name="filter", type="string", length=255, nullable=true)
      */
-    protected $startDate;
+    protected $filter;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dueDate", type="datetime", nullable=true))
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\ProjectIteration")
+     * @JoinColumn(name="project_iteration_id", referencedColumnName="id")
      */
-    protected $dueDate;
+    protected $projectIteration;
+
 
     /**
      * @var \DateTime
@@ -166,52 +160,6 @@ abstract  class Board
     }
 
     /**
-     * Set startDate
-     *
-     * @param \DateTime $startDate
-     * @return Board
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    /**
-     * Get startDate
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * Set dueDate
-     *
-     * @param \DateTime $dueDate
-     * @return Board
-     */
-    public function setDueDate($dueDate)
-    {
-        $this->dueDate = $dueDate;
-
-        return $this;
-    }
-
-    /**
-     * Get dueDate
-     *
-     * @return \DateTime
-     */
-    public function getDueDate()
-    {
-        return $this->dueDate;
-    }
-
-    /**
      * Set created
      *
      * @param \DateTime $created
@@ -256,49 +204,54 @@ abstract  class Board
     {
         return $this->updated;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tasks = new ArrayCollection();
+        $this->status = 0;
     }
 
-    /**
-     * Add tasks
-     *
-     * @param \Flower\ModelBundle\Entity\Board\Task $tasks
-     * @return Board
-     */
-    public function addTask(\Flower\ModelBundle\Entity\Board\Task $tasks)
-    {
-        $this->tasks[] = $tasks;
-
-        return $this;
-    }
-
-    /**
-     * Remove tasks
-     *
-     * @param \Flower\ModelBundle\Entity\Board\Task $tasks
-     */
-    public function removeTask(\Flower\ModelBundle\Entity\Board\Task $tasks)
-    {
-        $this->tasks->removeElement($tasks);
-    }
-
-    /**
-     * Get tasks
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTasks()
-    {
-        return $this->tasks;
-    }
 
     public function __toString()
     {
         return $this->name;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    /**
+     * @param mixed $filter
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectIteration()
+    {
+        return $this->projectIteration;
+    }
+
+    /**
+     * @param mixed $projectIteration
+     */
+    public function setProjectIteration($projectIteration)
+    {
+        $this->projectIteration = $projectIteration;
+    }
+
+
+
+
 }

@@ -1,0 +1,35 @@
+<h4>{{ 'quick task'|title }}</h4>
+
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-sm-6">
+        {{ form_row(form.name) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.type) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.account) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.assignee) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.estimated) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.dueDate) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.status) }}
+    </div>
+    <div class="col-sm-6">
+        {{ form_row(form.tracker) }}
+    </div>
+</div>
+<div>
+    {{ form_row(form.description) }}
+</div>
+{{ form_end(form) }}
+
+{{ form_javascript(form) }}

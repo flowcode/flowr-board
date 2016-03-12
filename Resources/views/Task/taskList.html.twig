@@ -1,0 +1,13 @@
+<table class="table table-condensed">
+    <tbody>
+    {% for task in tasks %}
+        <tr>
+            <td>
+                <a href="{{ path('task_show',{id:task.id}) }}">
+                    #{{ task.id }} {{ task.name | capitalize }}
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

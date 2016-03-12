@@ -24,24 +24,8 @@ class BoardType extends AbstractType
                     ),
                     'data' => 1
                 ))
-            ->add('startDate','collot_datetime', array( 'required' => false,
-                                                'pickerOptions' =>
-                                                array('format' => 'dd/mm/yyyy  hh:ii',
-                                                    'autoclose' => true,
-                                                    'todayBtn' => true,
-                                                    'todayHighlight' => true,
-                                                    'keyboardNavigation' => true,
-                                                    'language' => 'en',
-                                                    )))
-            ->add('dueDate','collot_datetime', array( 'required' => false,
-                                                'pickerOptions' =>
-                                                array('format' => 'dd/mm/yyyy  hh:ii',
-                                                    'autoclose' => true,
-                                                    'todayBtn' => true,
-                                                    'todayHighlight' => true,
-                                                    'keyboardNavigation' => true,
-                                                    'language' => 'en',
-                                                    )))
+            ->add('filter', null, array('required' => false))
+
         ;
     }
 

@@ -6,6 +6,10 @@ Assignee: Assignado
 'change status': 'cambiar estado'
 error.delete.task: La tarea no puede ser eliminada ya que contiene horas registradas.
 
+task: "tarea"
+tasks: "tareas"
+iterations: iteraciones
+
 activity.feed.project.create: "Creó el proyecto <a href='%link%'>%project_name%</a>."
 activity.feed.project.update: "Editó información del proyecto <a href='%link%'>%project_name%</a>."
 activity.feed.project.delete: "Elimninó el proyecto <a href='%link%'>%project_name%</a>."

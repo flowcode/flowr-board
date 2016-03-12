@@ -54,4 +54,19 @@ class TaskService implements ContainerAwareInterface
         $this->container = $container;
     }
 
+    public function getTaskFilter($filter)
+    {
+        /* expected: filter=project_id=3|account_id=1 */
+        $filterArr = array();
+        if(strlen($filter)){
+            $filtersStr = explode("|", $filter);
+            foreach ($filtersStr as $primaryFilter) {
+                $keyValueFilter = explode("=", $primaryFilter);
+                $filterArr[$keyValueFilter[0]] = $keyValueFilter[1];
+            }
+        }
+
+        return $filterArr;
+    }
+
 }

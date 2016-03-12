@@ -3,7 +3,8 @@
 '%entity% edit': 'Edición de Tablero'
 '%entity% list': 'Lista de Tableros'
 Active: Activo
-Board: Tableros
+Board: Tablero
+boards: tableros
 Closed: Cerrado
 'Confirm delete': 'Confirmar borrado'
 Create: Crear

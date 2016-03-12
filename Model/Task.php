@@ -14,7 +14,8 @@ use JMS\Serializer\Annotation\Groups;
 /**
  * Task
  */
-abstract class Task {
+abstract class Task
+{
 
     /**
      * @var integer
@@ -77,10 +78,28 @@ abstract class Task {
     protected $assignee;
 
     /**
-     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\Board", inversedBy="tasks")
-     * @JoinColumn(name="board_id", referencedColumnName="id")
-     * */
-    protected $board;
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Clients\Account")
+     * @JoinColumn(name="account_id", referencedColumnName="id")
+     */
+    protected $account;
+
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Clients\Opportunity")
+     * @JoinColumn(name="opportunity_id", referencedColumnName="id")
+     */
+    protected $opportunity;
+
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\Project")
+     * @JoinColumn(name="project_id", referencedColumnName="id")
+     */
+    protected $project;
+
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\ProjectIteration")
+     * @JoinColumn(name="project_iteration_id", referencedColumnName="id")
+     */
+    protected $projectIteration;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\TaskStatus")
@@ -96,6 +115,11 @@ abstract class Task {
     protected $tracker;
 
     /**
+     * @OneToMany(targetEntity="\Flower\ModelBundle\Entity\Board\TimeLog", mappedBy="task")
+     */
+    protected $timeLogs;
+
+    /**
      * @OneToMany(targetEntity="\Flower\ModelBundle\Entity\Board\TaskAttachment", mappedBy="task")
      */
     protected $attachments;
@@ -106,7 +130,7 @@ abstract class Task {
      * @ORM\Column(name="startDate", type="datetime", nullable=true)
      */
     protected $startDate;
-    
+
     /**
      * @var DateTime
      *
@@ -128,16 +152,18 @@ abstract class Task {
      * @ORM\Column(name="updated", type="datetime")
      */
     protected $updated;
-    
+
     public function __construct()
     {
         $this->position = 0;
         $this->attachments = new ArrayCollection();
+        $this->timeLogs = new ArrayCollection();
     }
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -160,7 +186,7 @@ abstract class Task {
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -183,7 +209,7 @@ abstract class Task {
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -206,7 +232,7 @@ abstract class Task {
     /**
      * Get dueDate
      *
-     * @return DateTime 
+     * @return DateTime
      */
     public function getDueDate()
     {
@@ -229,7 +255,7 @@ abstract class Task {
     /**
      * Get created
      *
-     * @return DateTime 
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -252,34 +278,11 @@ abstract class Task {
     /**
      * Get updated
      *
-     * @return DateTime 
+     * @return DateTime
      */
     public function getUpdated()
     {
         return $this->updated;
-    }
-
-    /**
-     * Set board
-     *
-     * @param \Flower\ModelBundle\Entity\Board\Board $board
-     * @return Task
-     */
-    public function setBoard(\Flower\ModelBundle\Entity\Board\Board $board = null)
-    {
-        $this->board = $board;
-
-        return $this;
-    }
-
-    /**
-     * Get board
-     *
-     * @return \Flower\ModelBundle\Entity\Board\Board 
-     */
-    public function getBoard()
-    {
-        return $this->board;
     }
 
     /**
@@ -298,7 +301,7 @@ abstract class Task {
     /**
      * Get status
      *
-     * @return \Flower\ModelBundle\Entity\Board\TaskStatus 
+     * @return \Flower\ModelBundle\Entity\Board\TaskStatus
      */
     public function getStatus()
     {
@@ -321,7 +324,7 @@ abstract class Task {
     /**
      * Get tracker
      *
-     * @return \Flower\ModelBundle\Entity\Board\Tracker 
+     * @return \Flower\ModelBundle\Entity\Board\Tracker
      */
     public function getTracker()
     {
@@ -349,7 +352,7 @@ abstract class Task {
     /**
      * Get creator
      *
-     * @return \Flower\ModelBundle\Entity\User\User 
+     * @return \Flower\ModelBundle\Entity\User\User
      */
     public function getCreator()
     {
@@ -372,7 +375,7 @@ abstract class Task {
     /**
      * Get assignee
      *
-     * @return User 
+     * @return User
      */
     public function getAssignee()
     {
@@ -395,7 +398,7 @@ abstract class Task {
     /**
      * Get estimated
      *
-     * @return float 
+     * @return float
      */
     public function getEstimated()
     {
@@ -418,7 +421,7 @@ abstract class Task {
     /**
      * Get position
      *
-     * @return integer 
+     * @return integer
      */
     public function getPosition()
     {
@@ -441,7 +444,7 @@ abstract class Task {
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
@@ -464,7 +467,7 @@ abstract class Task {
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -503,4 +506,86 @@ abstract class Task {
     {
         return $this->attachments;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @param mixed $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOpportunity()
+    {
+        return $this->opportunity;
+    }
+
+    /**
+     * @param mixed $opportunity
+     */
+    public function setOpportunity($opportunity)
+    {
+        $this->opportunity = $opportunity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param mixed $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectIteration()
+    {
+        return $this->projectIteration;
+    }
+
+    /**
+     * @param mixed $projectIteration
+     */
+    public function setProjectIteration($projectIteration)
+    {
+        $this->projectIteration = $projectIteration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeLogs()
+    {
+        return $this->timeLogs;
+    }
+
+    /**
+     * @param mixed $timeLogs
+     */
+    public function setTimeLogs($timeLogs)
+    {
+        $this->timeLogs = $timeLogs;
+    }
+
+
 }

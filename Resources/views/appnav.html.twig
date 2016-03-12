@@ -4,14 +4,16 @@
             <div class="col-sm-12">
                 <img src="{{ asset('bundles/flowercore/images/icons/Todo-List-100.png') }}"
                      class="img-responsive pull-left" width="40">
-                <span>{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</span>
+                <span>
+                    {{ 'tasks'|trans|title }}
+                </span>
             </div>
         </div>
     </div>
     <ul class="sidebar-menu">
 
         <li {% if app_board is defined %}class="active"{% endif %}>
-            <a href="{{ path('board') }}">{{ '%entity% list'|trans({'%entity%': 'Board'}, 'Board') }}</a>
+            <a href="{{ path('board') }}">{{ 'boards'|trans({}, 'Board')|title }}</a>
         </li>
 
         {% if board is defined and board.id is not null %}

@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
-class TaskType extends AbstractType
+class TaskQuickType extends AbstractType
 {
 
     private $securityContext;
@@ -27,10 +27,19 @@ class TaskType extends AbstractType
 
         $builder
             ->add('name')
+            ->add('account')
             ->add('assignee', 'entity', array(
                 'class' => 'FlowerModelBundle:User\User',
+                'required' => false,
             ))
             ->add('estimated', null, array('required' => false))
+            ->add('type', 'choice', array(
+                'choices' => array(
+                    TaskType2::TYPE_TASK => "task",
+                    TaskType2::TYPE_BUG => "bug",
+                )
+            ))
+            ->add('status', null, array('required' => true))
             ->add('dueDate', 'collot_datetime', array('required' => false,
                 'pickerOptions' =>
                     array('format' => 'dd/mm/yyyy  hh:ii',
@@ -40,20 +49,12 @@ class TaskType extends AbstractType
                         'keyboardNavigation' => true,
                         'language' => 'en',
                     )))
-            ->add('type', 'choice', array(
-                'choices' => array(
-                    TaskType2::TYPE_TASK => "task",
-                    TaskType2::TYPE_BUG => "bug",
-                )
-            ))
-            ->add('status', null, array('required' => true))
-            ->add('tracker')
+            ->add('tracker', null, array('required' => false))
             ->add('description', 'ckeditor', array(
                 'required' => false,
                 'config_name' => 'minimal'
             ))
-            ->add('save', 'submit', array('label' => 'Save'))
-            ->add('saveAndAdd', 'submit', array('label' => 'Save and add'));
+            ->add('save', 'submit', array('label' => 'Save'));
     }
 
     /**

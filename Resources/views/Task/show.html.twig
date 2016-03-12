@@ -3,7 +3,7 @@
 {% block title %}Task - {{ parent() }}{% endblock %}
 
 {% block app_menu %}
-    {{ include("FlowerBoardBundle::appnav.html.twig", { 'board':task.board }) }}
+    {{ include("FlowerBoardBundle::appnav.html.twig") }}
 {% endblock %}
 
 {% block body %}

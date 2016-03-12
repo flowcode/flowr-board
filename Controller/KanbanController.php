@@ -36,14 +36,17 @@ class KanbanController extends FOSRestController
     {
         $em = $this->getDoctrine()->getManager();
         $boardStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
-        $taskRepo = $em->getRepository("FlowerModelBundle:Board\Task");
+        $taskRepo = $em->getRepository('FlowerModelBundle:Board\Task');
+
+        $board = $em->getRepository('FlowerModelBundle:Board\Board')->find($board_id);
+        $filter = $this->get("board.service.task")->getTaskFilter($board->getFilter());
 
         $tasks = array();
 
         foreach ($boardStatuses as $boardStatus) {
             $status = array();
             $status["entity"] = $boardStatus;
-            $status["tasks"] = $taskRepo->findByStatus($boardStatus->getId(), $board_id);
+            $status["tasks"] = $taskRepo->findByStatus($boardStatus->getId(), $filter);
             array_push($tasks, $status);
         }
 
@@ -102,11 +105,27 @@ class KanbanController extends FOSRestController
         $statusArr = $request->get("status");
 
 
-        $status = $em->getRepository("FlowerModelBundle:Board\TaskStatus")->find($statusArr['id']);
-        $board = $em->getRepository("FlowerModelBundle:Board\Board")->find($request->get("board_id"));
-        $devTracker = $em->getRepository("FlowerModelBundle:Board\Tracker")->findOneBy(array('name' => 'development'));
+        $status = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->find($statusArr['id']);
+        $board = $em->getRepository('FlowerModelBundle:Board\Board')->find($request->get("board_id"));
+        $devTracker = $em->getRepository('FlowerModelBundle:Board\Tracker')->findOneBy(array('name' => 'development'));
 
-        $task->setBoard($board);
+        $filter = $this->get('board.service.task')->getTaskFilter($board->getFilter());
+
+        if (isset($filter['project_id'])) {
+            $project = $em->getRepository('FlowerModelBundle:Project\Project')->find($filter['project_id']);
+            $task->setProject($project);
+        }
+
+        if (isset($filter['project_iteration_id'])) {
+            $projectIteration = $em->getRepository('FlowerModelBundle:Project\ProjectIteration')->find($filter['project_iteration_id']);
+            $task->setProjectIteration($projectIteration);
+        }
+
+        if (isset($filter['account_id'])) {
+            $account = $em->getRepository('FlowerModelBundle:Board\Board')->find($filter['account_id']);
+            $task->setAccount($account);
+        }
+
         $task->setStatus($status);
         $task->setType($request->get("type", TaskType2::TYPE_TASK));
         $task->setCreator($this->getUser());
@@ -114,10 +133,14 @@ class KanbanController extends FOSRestController
         $task->setPosition($request->get("position"));
         $task->setTracker($devTracker);
 
+
         $em->persist($task);
+
+        $em->flush();
+        /*
         $taskService = $this->get("flower.core.service.task");
         $taskService->update($task);
-
+        */
 
         $view = FOSView::create($task, Codes::HTTP_OK)->setFormat('json');
         $view->getSerializationContext()->setGroups(array('kanban'));
@@ -218,9 +241,9 @@ class KanbanController extends FOSRestController
     }
 
     /**
-     * @param string $name  session name
+     * @param string $name session name
      * @param string $field field name
-     * @param string $type  sort type ("ASC"/"DESC")
+     * @param string $type sort type ("ASC"/"DESC")
      */
     protected function setOrder($name, $field, $type = 'ASC')
     {
@@ -240,7 +263,7 @@ class KanbanController extends FOSRestController
 
     /**
      * @param QueryBuilder $qb
-     * @param string       $name
+     * @param string $name
      */
     protected function addQueryBuilderSort(QueryBuilder $qb, $name)
     {
@@ -272,17 +295,16 @@ class KanbanController extends FOSRestController
     /**
      * Create Delete form
      *
-     * @param integer                       $id
-     * @param string                        $route
+     * @param integer $id
+     * @param string $route
      * @return Form
      */
     protected function createDeleteForm($id, $route)
     {
         return $this->createFormBuilder(null, array('attr' => array('id' => 'delete')))
-                        ->setAction($this->generateUrl($route, array('id' => $id)))
-                        ->setMethod('DELETE')
-                        ->getForm()
-        ;
+            ->setAction($this->generateUrl($route, array('id' => $id)))
+            ->setMethod('DELETE')
+            ->getForm();
     }
 
     /**

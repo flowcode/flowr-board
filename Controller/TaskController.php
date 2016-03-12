@@ -89,10 +89,10 @@ class TaskController extends Controller
     {
         $deleteForm = $this->createDeleteForm($task->getId(), 'task_delete');
 
-        $historyEntries = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\History")->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
-        $tasklogs = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
-        $spent = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
-        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
+        $historyEntries = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Board\History')->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
+        $tasklogs = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Board\TimeLog')->findBy(array("task" => $task->getId()), array("spentOn" => "DESC"));
+        $spent = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Board\TimeLog')->getSpentByTask($task);
+
         $editForm = $this->createForm($this->get('form.type.task'), $task, array(
             'action' => $this->generateUrl('task_update', array('id' => $task->getid())),
             'method' => 'PUT',
@@ -102,7 +102,6 @@ class TaskController extends Controller
             'edit_form' => $editForm->createView(),
             'spent' => $spent,
             'task' => $task,
-            'account' => $account,
             'tasklogs' => $tasklogs,
             'history_entries' => $historyEntries,
             'delete_form' => $deleteForm->createView(),
@@ -129,6 +128,7 @@ class TaskController extends Controller
             'form' => $form->createView(),
         );
     }
+
     /**
      * Displays a form to create a new Task entity.
      *
@@ -146,6 +146,43 @@ class TaskController extends Controller
 
         return array(
             'task' => $task,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to create a new Event entity.
+     *
+     * @Route("/new/quick", name="task_new_quick")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newQuickAction(Request $request)
+    {
+        $task = new Task();
+        $task->setType(TaskType2::TYPE_TASK);
+
+        if ($request->get("opportunity")) {
+            $opportunity = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Clients\Opportunity')->find($request->get("opportunity"));
+            $task->setOpportunity($opportunity);
+        }
+
+        if ($request->get("account")) {
+            $account = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Clients\Account')->find($request->get("account"));
+            $task->setAccount($account);
+        }
+
+        if ($request->get("project")) {
+            $project = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Project\Project')->find($request->get("project"));
+            $task->setProject($project);
+        }
+
+        $form = $this->createForm($this->get('form.type.task_quick'), $task, array(
+            'action' => $this->generateUrl('task_create_quick'),
+            'method' => 'POST',
+        ));
+
+        return array(
             'form' => $form->createView(),
         );
     }
@@ -185,7 +222,7 @@ class TaskController extends Controller
         $task->setProject($project);
         $task->setCreator($this->getUser());
         $task->setAssignee($this->getUser());
-        if($project->getAccount()){
+        if ($project->getAccount()) {
             $task->setAccount($project->getAccount());
         }
         $form = $this->createForm($this->get('form.type.task'), $task);
@@ -226,7 +263,7 @@ class TaskController extends Controller
     public function bulkSetAssigneeAction(User $user, Request $request)
     {
         $tasks = $request->query->get("tasks");
-        if(!$tasks){
+        if (!$tasks) {
             return new JsonResponse(null, 403);
         }
         $task = null;
@@ -236,7 +273,7 @@ class TaskController extends Controller
             $task->setAssignee($user);
             $em->flush();
         }
-        if($task && $task->getBoard()){
+        if ($task && $task->getBoard()) {
             $taskService = $this->get("flower.core.service.task");
             $taskService->massiveUpdate($task->getBoard());
         }
@@ -246,7 +283,7 @@ class TaskController extends Controller
     /**
      * Creates a new Task entity.
      *
-     * @Route("/board\{id}/tasks/create", name="board_task_create")
+     * @Route("/board/{id}/tasks/create", name="board_task_create")
      * @Method("POST")
      * @Template("FlowerBoardBundle:Board:taskNew.html.twig") //VER CAMBIO EN ANGULAR
      */
@@ -282,7 +319,7 @@ class TaskController extends Controller
     public function bulkSetStatusAction(TaskStatus $taskStatus, Request $request)
     {
         $tasks = $request->query->get("tasks");
-        if(!$tasks){
+        if (!$tasks) {
             return new JsonResponse(null, 403);
         }
         $task = null;
@@ -292,12 +329,13 @@ class TaskController extends Controller
             $task->setStatus($taskStatus);
             $em->flush();
         }
-        if($task && $task->getBoard()){
+        if ($task && $task->getBoard()) {
             $taskService = $this->get("flower.core.service.task");
             $taskService->massiveUpdate($task->getBoard());
         }
         return new JsonResponse(null, 200);
     }
+
     /**
      * Creates a new Task entity.
      *
@@ -317,14 +355,44 @@ class TaskController extends Controller
     /**
      * Creates a new Task entity.
      *
-     * @Route("/create/{id}", name="task_create", requirements={"id"="\d+"})
+     * @Route("/create_quick", name="task_create_quick")
+     * @Method("POST")
+     * @Template("FlowerBoardBundle:Task:newQuick.html.twig")
+     */
+    public function createQuickAction(Request $request)
+    {
+        $task = new Task();
+
+        $form = $this->createForm($this->get('form.type.task_quick'), $task);
+        if ($form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $task->setCreator($this->getUser());
+
+            $em->persist($task);
+
+            $taskService = $this->get("flower.core.service.task");
+            $taskService->update($task);
+
+            return new JsonResponse();
+        }
+
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Creates a new Task entity.
+     *
+     * @Route("/create", name="task_create", requirements={"id"="\d+"})
      * @Method("POST")
      * @Template("FlowerBoardBundle:Task:new.html.twig")
      */
-    public function createAction(Board $board, Request $request)
+    public function createAction(Request $request)
     {
         $task = new Task();
-        $task->setBoard($board);
+
         $form = $this->createForm($this->get('form.type.task'), $task);
         if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -362,11 +430,11 @@ class TaskController extends Controller
         $deleteForm = $this->createDeleteForm($task->getId(), 'task_delete');
         $em = $this->getDoctrine()->getManager();
         $historyEntries = $em->getRepository("FlowerModelBundle:Board\History")->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
-        $tasklogs = $em->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
+        $tasklogs = $em->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()), array("spentOn" => "DESC"));
         $spent = $em->getRepository("FlowerModelBundle:Board\TimeLog")->getSpentByTask($task);
         $account = $em->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($task->getBoard());
         $project = $em->getRepository("FlowerModelBundle:Project\Project")->findByBoard($task->getBoard());
-        if(!$account && $project){
+        if (!$account && $project) {
             $account = $project->getAccount();
         }
         return array(
@@ -421,9 +489,9 @@ class TaskController extends Controller
     }
 
     /**
-     * @param string $name  session name
+     * @param string $name session name
      * @param string $field field name
-     * @param string $type  sort type ("ASC"/"DESC")
+     * @param string $type sort type ("ASC"/"DESC")
      */
     protected function setOrder($name, $field, $type = 'ASC')
     {
@@ -443,7 +511,7 @@ class TaskController extends Controller
 
     /**
      * @param QueryBuilder $qb
-     * @param string       $name
+     * @param string $name
      */
     protected function addQueryBuilderSort(QueryBuilder $qb, $name)
     {
@@ -464,38 +532,37 @@ class TaskController extends Controller
         $board = $task->getBoard();
         $form = $this->createDeleteForm($task->getId(), 'task_delete');
         $em = $this->getDoctrine()->getManager();
-        $tasklogs = $em->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()),array("spentOn" => "DESC"));
-        if(count($tasklogs) > 0){
+        $tasklogs = $em->getRepository("FlowerModelBundle:Board\TimeLog")->findBy(array("task" => $task->getId()), array("spentOn" => "DESC"));
+        if (count($tasklogs) > 0) {
             $this->addFlash(
-                    'danger',
-                     $this->get('translator')->trans('error.delete.task')
-                );
-            return $this->redirect($this->generateUrl('task_show',array("id" => $task->getId())));
-        }else{
+                'danger',
+                $this->get('translator')->trans('error.delete.task')
+            );
+            return $this->redirect($this->generateUrl('task_show', array("id" => $task->getId())));
+        } else {
             if ($form->handleRequest($request)->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($task);
                 $em->flush();
             }
 
-            return $this->redirect($this->generateUrl('board_task_kanban',array("id"=> $board->getId() )));
+            return $this->redirect($this->generateUrl('board_task_kanban', array("id" => $board->getId())));
         }
     }
 
     /**
      * Create Delete form
      *
-     * @param integer                       $id
-     * @param string                        $route
+     * @param integer $id
+     * @param string $route
      * @return Form
      */
     protected function createDeleteForm($id, $route)
     {
         return $this->createFormBuilder(null, array('attr' => array('id' => 'delete')))
-                        ->setAction($this->generateUrl($route, array('id' => $id)))
-                        ->setMethod('DELETE')
-                        ->getForm()
-        ;
+            ->setAction($this->generateUrl($route, array('id' => $id)))
+            ->setMethod('DELETE')
+            ->getForm();
     }
 
     /**
@@ -512,7 +579,7 @@ class TaskController extends Controller
         $form = $this->createForm(new TimeLogType(), $timelog);
 
         return array(
-            'task'=> $task,
+            'task' => $task,
             'timelog' => $timelog,
             'form' => $form->createView(),
         );

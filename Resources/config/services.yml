@@ -1,5 +1,18 @@
 services:
 
+    form.type.task:
+        class: Flower\BoardBundle\Form\Type\TaskType
+        arguments: ["@security.context"]
+        tags:
+            - { name: form.type, alias: task_type }
+
+    form.type.task_quick:
+            class: Flower\BoardBundle\Form\Type\TaskQuickType
+            arguments: ["@security.context"]
+            tags:
+                - { name: form.type, alias: task_type }
+
+
     board.repository.history:
         class: Doctrine\ORM\EntityRepository
         factory: [@doctrine.orm.entity_manager, getRepository]
@@ -19,3 +32,4 @@ services:
         class: Flower\BoardBundle\Service\ReportService
         calls:
             - [setContainer, ["@service_container"]]
+

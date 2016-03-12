@@ -17,39 +17,39 @@
                     <a class="btn btn-link btn-sm" href={{ path('board_new') }}>
                         <i class="fa fa-plus"></i> {{ 'Create a new %entity%'|trans({'%entity%': 'Board'}, 'Board') }}
                     </a>
-                            </div>
+                </div>
             </div>
-            <div class="box-body">    
-            <table class="table table-condensed table-hover ">
-                <thead>
+            <div class="box-body">
+                <table class="table table-condensed table-hover ">
+                    <thead>
                     <tr>
-                        <th scope="col" >{{'Name' | trans({}, 'Board')}}</th>
-                        <th scope="col">{{'Status' | trans({}, 'Board')}}</th>
-                        <th scope="col">{{'due date' | trans({}, 'Board')}}</th>
+                        <th scope="col">{{ 'Name' | trans({}, 'Board') }}</th>
+                        <th scope="col">{{ 'Status' | trans({}, 'Board') }}</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {% for board in paginator %}
                         <tr>
-                            <td ><a title="{{ board.description }}" class="" href="{{ path('board_task_kanban', {"id": board.id}) }}">{{ board.name | capitalize }}</a></td>
+                            <td><a title="{{ board.description }}" class=""
+                                   href="{{ path('board_task_kanban', {"id": board.id}) }}">{{ board.name | capitalize }}</a>
+                            </td>
 
                             {% if board.status == 1 %}
-                            <td>{{'open' | trans({}, 'Board') | capitalize}}</td>
+                                <td>{{ 'open' | trans({}, 'Board') | capitalize }}</td>
                             {% else %}
-                            <td>{{'closed' | trans({}, 'Board')| capitalize}}</td>
-                        {% endif %}
-                            <td>{% if board.dueDate %}{{ board.dueDate|date("smallDate" | trans) }}{% endif %}</td>
+                                <td>{{ 'closed' | trans({}, 'Board')| capitalize }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
-                </tbody>
-            </table>
-            
-            {{ knp_pagination_render(paginator) }}
-            </div>
-        <div class="box-footer">
+                    </tbody>
+                </table>
 
-        </div>
-        
-    </section>        
+                {{ knp_pagination_render(paginator) }}
+            </div>
+            <div class="box-footer">
+
+            </div>
+
+    </section>
 
 {% endblock %}
