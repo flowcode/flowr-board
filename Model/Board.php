@@ -12,10 +12,10 @@ use JMS\Serializer\Annotation\Groups;
 
 /**
  * Board
- *
  */
 abstract class Board
 {
+
     /**
      * @var integer
      *
@@ -43,25 +43,16 @@ abstract class Board
     protected $description;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="status", type="integer")
-     */
-    protected $status;
+     * @OneToMany(targetEntity="Flower\ModelBundle\Entity\Board\Task", mappedBy="board")
+     * */
+    protected $tasks;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="filter", type="string", length=255, nullable=true)
+     * @ORM\Column(name="archived", type="boolean")
      */
-    protected $filter;
-
-    /**
-     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\ProjectIteration")
-     * @JoinColumn(name="project_iteration_id", referencedColumnName="id")
-     */
-    protected $projectIteration;
-
+    protected $archived;
 
     /**
      * @var \DateTime
@@ -78,7 +69,6 @@ abstract class Board
      * @ORM\Column(name="updated", type="datetime")
      */
     protected $updated;
-
 
     /**
      * Get id
@@ -137,29 +127,6 @@ abstract class Board
     }
 
     /**
-     * Set status
-     *
-     * @param integer $status
-     * @return Board
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return integer
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * Set created
      *
      * @param \DateTime $created
@@ -210,7 +177,8 @@ abstract class Board
      */
     public function __construct()
     {
-        $this->status = 0;
+        $this->tasks = new ArrayCollection();
+        $this->archived = 0;
     }
 
 
@@ -222,35 +190,34 @@ abstract class Board
     /**
      * @return mixed
      */
-    public function getFilter()
+    public function getTasks()
     {
-        return $this->filter;
+        return $this->tasks;
     }
 
     /**
-     * @param mixed $filter
+     * @param mixed $tasks
      */
-    public function setFilter($filter)
+    public function setTasks($tasks)
     {
-        $this->filter = $filter;
+        $this->tasks = $tasks;
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
-    public function getProjectIteration()
+    public function isArchived()
     {
-        return $this->projectIteration;
+        return $this->archived;
     }
 
     /**
-     * @param mixed $projectIteration
+     * @param boolean $archived
      */
-    public function setProjectIteration($projectIteration)
+    public function setArchived($archived)
     {
-        $this->projectIteration = $projectIteration;
+        $this->archived = $archived;
     }
-
 
 
 

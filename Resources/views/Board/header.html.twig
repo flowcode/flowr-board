@@ -1,11 +1,11 @@
 <div>
     <small>
-        {% if board.projectIteration %}
-            {% if board.projectIteration.project.account %}
-                <a href="{{ path('account_show', { 'id': board.projectIteration.project.account.id }) }}">{{ board.projectIteration.project.account|capitalize }}</a>
+        {% if filter.projectIteration %}
+            {% if filter.projectIteration.project.account %}
+                <a href="{{ path('account_show', { 'id': filter.projectIteration.project.account.id }) }}">{{ filter.projectIteration.project.account|capitalize }}</a>
                 <i class="fa fa-angle-right"></i>
             {% endif %}
-            <a href="{{ path('project_iteration_show', { 'id': board.projectIteration.id }) }}">{{ board.projectIteration|capitalize }}</a>
+            <a href="{{ path('project_iteration_show', { 'id': filter.projectIteration.id }) }}">{{ filter.projectIteration|capitalize }}</a>
         {% endif %}
     </small>
 </div>

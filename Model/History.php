@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Flower\ModelBundle\Entity\User\User;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * History
@@ -41,6 +42,7 @@ abstract class History
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
+     * @Groups({"full"})
      */
     protected $type;
 
@@ -48,6 +50,7 @@ abstract class History
      * @var string
      *
      * @ORM\Column(name="enitity_id", type="string", length=255, nullable=true)
+     * @Groups({"full"})
      */
     protected $enitity_id;
     
@@ -55,6 +58,7 @@ abstract class History
      * @var string
      *
      * @ORM\Column(name="attribute", type="string", length=255, nullable=true)
+     * @Groups({"full"})
      */
     protected $attribute;
 
@@ -62,6 +66,7 @@ abstract class History
      * @var string
      *
      * @ORM\Column(name="value_old", type="string", length=255, nullable=true)
+     * @Groups({"full"})
      */
     protected $oldValue;
 
@@ -69,6 +74,7 @@ abstract class History
      * @var string
      *
      * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     * @Groups({"full"})
      */
     protected $value;
 
@@ -82,6 +88,7 @@ abstract class History
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @Groups({"full"})
      * */
     protected $user;
 
@@ -90,6 +97,7 @@ abstract class History
      *
      * @ORM\Column(name="changedOn", type="datetime")
      * @Gedmo\Timestampable(on="create")
+     * @Groups({"full"})
      */
     protected $changedOn;
     

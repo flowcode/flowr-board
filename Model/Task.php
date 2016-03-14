@@ -23,7 +23,7 @@ abstract class Task
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"kanban","search"})
+     * @Groups({"kanban","search","full"})
      */
     protected $id;
 
@@ -31,7 +31,7 @@ abstract class Task
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Groups({"kanban","search"})
+     * @Groups({"kanban","search","full"})
      */
     protected $name;
 
@@ -52,7 +52,7 @@ abstract class Task
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"kanban","search"})
+     * @Groups({"kanban","search","full"})
      */
     protected $description;
 
@@ -60,20 +60,21 @@ abstract class Task
      * @var float
      *
      * @ORM\Column(name="estimated_hours", type="float", nullable=true)
-     * @Groups({"kanban","search"})
+     * @Groups({"kanban","search","full"})
      */
     protected $estimated;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @Groups({"full"})
      * */
     protected $creator;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @JoinColumn(name="user_id", referencedColumnName="id")
-     * @Groups({"kanban","search"})
+     * @Groups({"kanban","search","full"})
      * */
     protected $assignee;
 
@@ -96,6 +97,12 @@ abstract class Task
     protected $project;
 
     /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\Board")
+     * @JoinColumn(name="board_id", referencedColumnName="id")
+     */
+    protected $board;
+
+    /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\ProjectIteration")
      * @JoinColumn(name="project_iteration_id", referencedColumnName="id")
      */
@@ -104,13 +111,14 @@ abstract class Task
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\TaskStatus")
      * @JoinColumn(name="status_id", referencedColumnName="id")
-     * @Groups({"kanban","search"})
+     * @Groups({"kanban","search","full"})
      * */
     protected $status;
 
     /**
      * @ManyToOne(targetEntity="Tracker")
      * @JoinColumn(name="tracker_id", referencedColumnName="id")
+     * @Groups({"kanban","search","full"})
      * */
     protected $tracker;
 
@@ -121,6 +129,7 @@ abstract class Task
 
     /**
      * @OneToMany(targetEntity="\Flower\ModelBundle\Entity\Board\TaskAttachment", mappedBy="task")
+     * @Groups({"full"})
      */
     protected $attachments;
 
@@ -128,6 +137,7 @@ abstract class Task
      * @var DateTime
      *
      * @ORM\Column(name="startDate", type="datetime", nullable=true)
+     * @Groups({"kanban","search", "full"})
      */
     protected $startDate;
 
@@ -135,6 +145,7 @@ abstract class Task
      * @var DateTime
      *
      * @ORM\Column(name="dueDate", type="datetime", nullable=true)
+     * @Groups({"kanban","search", "full"})
      */
     protected $dueDate;
 
@@ -142,6 +153,7 @@ abstract class Task
      * @var DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created", type="datetime")
+     * @Groups({"kanban","search", "full"})
      */
     protected $created;
 
@@ -150,6 +162,7 @@ abstract class Task
      *
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated", type="datetime")
+     * @Groups({"kanban","search", "full"})
      */
     protected $updated;
 
@@ -585,6 +598,22 @@ abstract class Task
     public function setTimeLogs($timeLogs)
     {
         $this->timeLogs = $timeLogs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBoard()
+    {
+        return $this->board;
+    }
+
+    /**
+     * @param mixed $board
+     */
+    public function setBoard($board)
+    {
+        $this->board = $board;
     }
 
 

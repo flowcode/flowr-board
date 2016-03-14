@@ -3,6 +3,8 @@
 namespace Flower\BoardBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Tracker
@@ -17,6 +19,7 @@ class Tracker
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"full"})
      */
     protected $id;
 
@@ -24,6 +27,7 @@ class Tracker
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Groups({"full"})
      */
     protected $name;
 

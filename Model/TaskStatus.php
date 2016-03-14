@@ -24,7 +24,7 @@ abstract  class TaskStatus
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"kanban"})
+     * @Groups({"kanban","full"})
      */
     protected $id;
 
@@ -32,7 +32,7 @@ abstract  class TaskStatus
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Groups({"kanban"})
+     * @Groups({"kanban","full"})
      */
     protected $name;
 

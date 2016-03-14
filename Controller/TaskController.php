@@ -258,11 +258,11 @@ class TaskController extends Controller
     /**
      *
      * @Route("/{id}/bulk_user", name="task_bulk_user", requirements={"id"="\d+"})
-     * @Method("GET")
+     * @Method("POST")
      */
     public function bulkSetAssigneeAction(User $user, Request $request)
     {
-        $tasks = $request->query->get("tasks");
+        $tasks = $request->get("tasks");
         if (!$tasks) {
             return new JsonResponse(null, 403);
         }
@@ -314,11 +314,11 @@ class TaskController extends Controller
     /**
      *
      * @Route("/{id}/bulk_status", name="task_bulk_status", requirements={"id"="\d+"})
-     * @Method("GET")
+     * @Method("POST")
      */
     public function bulkSetStatusAction(TaskStatus $taskStatus, Request $request)
     {
-        $tasks = $request->query->get("tasks");
+        $tasks = $request->get("tasks");
         if (!$tasks) {
             return new JsonResponse(null, 403);
         }

@@ -98,47 +98,7 @@ class BoardController extends Controller
         }
     }
 
-    /**
-     * Lists all Board entities.
-     *
-     * @Route("/{id}/tasks/list", name="board_task_list")
-     * @Method("GET")
-     * @Template()
-     */
-    public function tasksListAction(Board $board, Request $request)
-    {
 
-        $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:Board\Task')->createQueryBuilder('t');
-        $qb->join("t.status", "s");
-
-        $qb->where("t.board = :board")->setParameter("board", $board->getId());
-
-        $this->addQueryBuilderSort($qb, 'board');
-        $statusFilter = $request->query->get('statusFilter');
-        $this->addFilter($qb, $statusFilter, "t.status");
-        $assigneeFilter = $request->query->get('assigneeFilter');
-        $this->addFilter($qb, $assigneeFilter, "t.assignee");
-
-        $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
-        $statuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->findAll();
-        $users = $em->getRepository('FlowerModelBundle:User\User')->findAll();
-
-        $account = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Account")->findByBoard($board);
-        $opportunity = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Clients\Opportunity")->findByBoard($board);
-        $project = $this->getDoctrine()->getManager()->getRepository("FlowerModelBundle:Project\Project")->findByBoard($board);
-        return array(
-            'board_opportunity' => $opportunity,
-            'board_project' => $project,
-            'board_account' => $account,
-            'assigneeFilter' => $assigneeFilter,
-            'statusFilter' => $statusFilter,
-            'users' => $users,
-            'statuses' => $statuses,
-            'board' => $board,
-            'paginator' => $paginator,
-        );
-    }
 
     /**
      * Displays a form to create a new Board entity.

@@ -5,6 +5,7 @@ namespace Flower\BoardBundle\Controller;
 use Doctrine\ORM\QueryBuilder;
 use Flower\CoreBundle\Form\Type\TaskType;
 use Flower\CoreBundle\Form\Type\TimeLogType;
+use Flower\ModelBundle\Entity\Board\History;
 use Flower\ModelBundle\Entity\Board\Task;
 use Flower\ModelBundle\Entity\Board\TaskType as TaskType2;
 use Flower\ModelBundle\Entity\Board\TimeLog;
@@ -29,20 +30,42 @@ class KanbanController extends FOSRestController
     /**
      * Lists all Task entities.
      *
-     * @Route("/tasks/board/{board_id}", name="kanban_tasks")
+     * @Route("/tasks/list/filter/{task_filter_id}", name="kanban_tasks_list")
      * @Method("GET")
      */
-    public function tasksAction(Request $request, $board_id)
+    public function tasksAllAction(Request $request, $task_filter_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $taskRepo = $em->getRepository('FlowerModelBundle:Board\Task');
+
+        $taskFilter = $em->getRepository('FlowerModelBundle:Board\TaskFilter')->find($task_filter_id);
+        $filter = $this->get("board.service.task")->getTaskFilter($taskFilter->getFilter());
+
+        $tasks = array();
+        $tasks = $taskRepo->findByStatus(null, $filter);
+
+        $view = FOSView::create($tasks, Codes::HTTP_OK)->setFormat('json');
+        $view->getSerializationContext()->setGroups(array('kanban'));
+        return $this->handleView($view);
+    }
+
+    /**
+     * Lists all Task entities.
+     *
+     * @Route("/tasks/kanban/filter/{task_filter_id}", name="kanban_tasks_kanban")
+     * @Method("GET")
+     */
+    public function tasksAction(Request $request, $task_filter_id)
     {
         $em = $this->getDoctrine()->getManager();
         $boardStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
+
         $taskRepo = $em->getRepository('FlowerModelBundle:Board\Task');
 
-        $board = $em->getRepository('FlowerModelBundle:Board\Board')->find($board_id);
-        $filter = $this->get("board.service.task")->getTaskFilter($board->getFilter());
+        $taskFilter = $em->getRepository('FlowerModelBundle:Board\TaskFilter')->find($task_filter_id);
+        $filter = $this->get("board.service.task")->getTaskFilter($taskFilter->getFilter());
 
         $tasks = array();
-
         foreach ($boardStatuses as $boardStatus) {
             $status = array();
             $status["entity"] = $boardStatus;
@@ -50,8 +73,24 @@ class KanbanController extends FOSRestController
             array_push($tasks, $status);
         }
 
-
         $view = FOSView::create($tasks, Codes::HTTP_OK)->setFormat('json');
+        $view->getSerializationContext()->setGroups(array('kanban'));
+        return $this->handleView($view);
+    }
+
+    /**
+     * Lists all Task entities.
+     *
+     * @Route("/tasks/statuses/filter/{task_filter_id}", name="kanban_tasks_statuses")
+     * @Method("GET")
+     */
+    public function tasksStatusesAction(Request $request, $task_filter_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $boardStatuses = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->getKanbanStatuses();
+
+
+        $view = FOSView::create($boardStatuses, Codes::HTTP_OK)->setFormat('json');
         $view->getSerializationContext()->setGroups(array('kanban'));
         return $this->handleView($view);
     }
@@ -104,12 +143,16 @@ class KanbanController extends FOSRestController
         $task->setDescription($request->get("description"));
         $statusArr = $request->get("status");
 
-
         $status = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->find($statusArr['id']);
-        $board = $em->getRepository('FlowerModelBundle:Board\Board')->find($request->get("board_id"));
+        $taskFilter = $em->getRepository('FlowerModelBundle:Board\TaskFilter')->find($request->get("task_filter_id"));
         $devTracker = $em->getRepository('FlowerModelBundle:Board\Tracker')->findOneBy(array('name' => 'development'));
 
-        $filter = $this->get('board.service.task')->getTaskFilter($board->getFilter());
+        $filter = $this->get('board.service.task')->getTaskFilter($taskFilter->getFilter());
+
+        if (isset($filter['board_id'])) {
+            $board = $em->getRepository('FlowerModelBundle:Board\Board')->find($filter['board_id']);
+            $task->setBoard($board);
+        }
 
         if (isset($filter['project_id'])) {
             $project = $em->getRepository('FlowerModelBundle:Project\Project')->find($filter['project_id']);
@@ -126,6 +169,11 @@ class KanbanController extends FOSRestController
             $task->setAccount($account);
         }
 
+        if (isset($filter['opportunity_id'])) {
+            $opportunity = $em->getRepository('FlowerModelBundle:Clients\Opportunity')->find($filter['opportunity_id']);
+            $task->setOpportunity($opportunity);
+        }
+
         $task->setStatus($status);
         $task->setType($request->get("type", TaskType2::TYPE_TASK));
         $task->setCreator($this->getUser());
@@ -137,6 +185,7 @@ class KanbanController extends FOSRestController
         $em->persist($task);
 
         $em->flush();
+
         /*
         $taskService = $this->get("flower.core.service.task");
         $taskService->update($task);
@@ -324,6 +373,45 @@ class KanbanController extends FOSRestController
             'timelog' => $timelog,
             'form' => $form->createView(),
         );
+    }
+
+    /**
+     * Finds and displays a Task entity.
+     *
+     * @Route("/tasks/{id}", name="kanban_task_show_full", requirements={"id"="\d+"})
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction(Task $task)
+    {
+
+        $historyEntries = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Board\History')->findBy(array("enitity_id" => $task->getId(), "type" => History::TYPE_TASK));
+        $tasklogs = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Board\TimeLog')->findBy(array("task" => $task->getId()), array("spentOn" => "DESC"));
+        $spent = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Board\TimeLog')->getSpentByTask($task);
+
+        if (is_null($task->getCreator()->getAvatar())) {
+            $gravatarUrl = "http://www.gravatar.com/avatar/";
+            $hash = md5(strtolower(trim($task->getCreator()->getEmail())));
+            $avatarUrl = $gravatarUrl . $hash;
+            $task->getCreator()->setAvatar($avatarUrl);
+        }
+        if (is_null($task->getAssignee()->getAvatar())) {
+            $gravatarUrl = "http://www.gravatar.com/avatar/";
+            $hash = md5(strtolower(trim($task->getAssignee()->getEmail())));
+            $avatarUrl = $gravatarUrl . $hash;
+            $task->getAssignee()->setAvatar($avatarUrl);
+        }
+
+        $taskArr = array(
+            'spent' => $spent,
+            'task' => $task,
+            'tasklogs' => $tasklogs,
+            'history_entries' => $historyEntries,
+        );
+
+        $view = FOSView::create($taskArr, Codes::HTTP_OK)->setFormat('json');
+        $view->getSerializationContext()->setGroups(array('full'));
+        return $this->handleView($view);
     }
 
 }

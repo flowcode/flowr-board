@@ -47,7 +47,7 @@ class TaskRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findBetweenOrdersAndProject($from, $to , $board, $status_id)
+    public function findBetweenOrdersAndProject($from, $to, $board, $status_id)
     {
         $qb = $this->createQueryBuilder("t");
         //$qb->andWhere("t.board = :board_id")->setParameter("board_id", $board);
@@ -67,7 +67,7 @@ class TaskRepository extends EntityRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function findByStatus($statusId = null, $filter = array(), $max = null)
+    public function findByStatusQB($statusId = null, $filter = array())
     {
         $qb = $this->createQueryBuilder("t");
 
@@ -82,10 +82,12 @@ class TaskRepository extends EntityRepository
         if (isset($filter['project_iteration_id'])) {
             $qb->andWhere("t.projectIteration = :project_iteration_id")->setParameter("project_iteration_id", $filter['project_iteration_id']);
         }
+        return $qb;
+    }
 
-        if (!is_null($max)) {
-            $qb->setMaxResults($max);
-        }
+    public function findByStatus($statusId = null, $filter = array(), $max = null)
+    {
+        $qb = $this->findByStatusQB($statusId, $filter);
         $qb->orderBy("t.position", "ASC");
         $qb->addOrderBy("t.updated", "DESC");
         return $qb->getQuery()->getResult();
@@ -96,9 +98,9 @@ class TaskRepository extends EntityRepository
         $qb = $this->createQueryBuilder("t");
 
         if (!is_null($statusId)) {
-            if(is_array($statusId)){
+            if (is_array($statusId)) {
                 $qb->andWhere("t.status in (:status_id)")->setParameter("status_id", $statusId);
-            }else{
+            } else {
                 $qb->andWhere("t.status = :status_id")->setParameter("status_id", $statusId);
             }
         }
@@ -127,29 +129,29 @@ class TaskRepository extends EntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function search($completeText, $texts,$limit = 10)
+    public function search($completeText, $texts, $limit = 10)
     {
         $qb = $this->createQueryBuilder("t");
-        $qb->andWhere("t.name like :text")->setParameter("text", "%".$completeText."%");
+        $qb->andWhere("t.name like :text")->setParameter("text", "%" . $completeText . "%");
         $qb->setMaxResults($limit);
         $result = $qb->getQuery()->getResult();
 
 
         $qb = $this->createQueryBuilder("t");
-        $qb->andWhere("t.description like :text")->setParameter("text", "%".$completeText."%");
+        $qb->andWhere("t.description like :text")->setParameter("text", "%" . $completeText . "%");
         $qb->setMaxResults($limit);
-        $result = array_merge($result,$qb->getQuery()->getResult());
-        
+        $result = array_merge($result, $qb->getQuery()->getResult());
+
         $qb = $this->createQueryBuilder("t");
         $count = 0;
         foreach ($texts as $text) {
-            $qb->orWhere("t.name like :text")->setParameter("text", "%".$text."%");
-            $qb->orWhere("t.description like :text")->setParameter("text", "%".$text."%");
-            $qb->orWhere("t.id like :text")->setParameter("text", "%".$text."%");
+            $qb->orWhere("t.name like :text")->setParameter("text", "%" . $text . "%");
+            $qb->orWhere("t.description like :text")->setParameter("text", "%" . $text . "%");
+            $qb->orWhere("t.id like :text")->setParameter("text", "%" . $text . "%");
             $qb->setMaxResults($limit);
-            $count ++;
+            $count++;
         }
-        $result = array_merge($result,$qb->getQuery()->getResult());
+        $result = array_merge($result, $qb->getQuery()->getResult());
 
         return array_unique($result, SORT_REGULAR);
     }

@@ -23,7 +23,7 @@ abstract class TaskAttachment
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"kanban"})
+     * @Groups({"kanban", "full"})
      */
     protected $id;
 
@@ -37,15 +37,23 @@ abstract class TaskAttachment
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Groups({"kanban"})
+     * @Groups({"full"})
      */
     protected $name;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @Groups({"full"})
+     */
+    protected $description;
 
     /**
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
+     * @Groups({"full"})
      */
     protected $path;
 
