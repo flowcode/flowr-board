@@ -86,6 +86,7 @@ abstract class TaskFilter
     function __construct()
     {
         $this->private = false;
+        $this->archived = false;
     }
 
     /**

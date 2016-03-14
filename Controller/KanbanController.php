@@ -144,7 +144,7 @@ class KanbanController extends FOSRestController
         $statusArr = $request->get("status");
 
         $status = $em->getRepository('FlowerModelBundle:Board\TaskStatus')->find($statusArr['id']);
-        $taskFilter = $em->getRepository('FlowerModelBundle:Board\TaskFilter')->find($request->get("task_filter_id"));
+        $taskFilter = $em->getRepository('FlowerModelBundle:Board\TaskFilter')->find($request->get("filter_id"));
         $devTracker = $em->getRepository('FlowerModelBundle:Board\Tracker')->findOneBy(array('name' => 'development'));
 
         $filter = $this->get('board.service.task')->getTaskFilter($taskFilter->getFilter());
