@@ -227,5 +227,10 @@ abstract class TaskFilter
         $this->name = $name;
     }
 
+    function __toString()
+    {
+        return $this->name;
+    }
+
 
 }

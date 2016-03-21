@@ -157,4 +157,22 @@ class TaskRepository extends EntityRepository
     }
 
 
+    public function getEstimatedOn($projectIterationId, \DateTime $date)
+    {
+        $qb = $this->createQueryBuilder("t");
+        $qb->select("SUM(t.estimated)");
+        $qb->join("t.projectIteration", "ti");
+        $qb->innerJoin('FlowerModelBundle:Board\History', "h", Join::WITH, "h.enitity_id = t.id");
+        $qb->where("ti.id = :project_iteration_id")->setParameter("project_iteration_id", $projectIterationId);
+
+        $qb->andWhere("h.type = 'task'");
+        $qb->andWhere("h.value = 'done'");
+        $qb
+            ->andWhere('h.changedOn < :date_end')
+            ->setParameter('date_end', $date->format('Y-m-d 23:59:59'));
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+
 }

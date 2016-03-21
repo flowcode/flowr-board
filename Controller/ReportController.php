@@ -20,7 +20,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ReportController extends Controller
 {
-	/**
+    /**
      * Lists all Report entities.
      *
      * @Route("/", name="report_index")
@@ -33,7 +33,7 @@ class ReportController extends Controller
         $conn = $this->get('database_connection');
         $translator = $this->get('translator');
         $dateformat = $translator->trans('fullDateTime');
-        $addGroupBy=null;
+        $addGroupBy = null;
 
         /* Addons, agregados para filtrado */
         $groupBy = ["account", "project", "board"];
@@ -61,28 +61,28 @@ class ReportController extends Controller
             'addGroupBy' => $addGroupBy,
             'groupBy' => $groupBy,
             'tableHeader' => $tableHeader,
-            'startDateFilter' => isset($filters['startDateFilter'])?$filters['startDateFilter']["value"] : null,
-            'endDateFilter' => isset($filters['endDateFilter'])?$filters['endDateFilter']["value"] : null,
+            'startDateFilter' => isset($filters['startDateFilter']) ? $filters['startDateFilter']["value"] : null,
+            'endDateFilter' => isset($filters['endDateFilter']) ? $filters['endDateFilter']["value"] : null,
         );
     }
 
     private function addFilter($qb, $filter, $field)
     {
-        if($filter && count($filter) > 0){    
-            if( implode(",", $filter) != ""){
+        if ($filter && count($filter) > 0) {
+            if (implode(",", $filter) != "") {
                 $filterAux = array();
                 $nullFilter = "";
                 foreach ($filter as $element) {
-                    if($element == "-1"){
-                        $nullFilter = " OR  (".$field." is NULL)";
-                    }else{
+                    if ($element == "-1") {
+                        $nullFilter = " OR  (" . $field . " is NULL)";
+                    } else {
                         $filterAux[] = $element;
                     }
                 }
-                if(count($filterAux) > 0){
-                    $qb->andWhere(" ( ".$field." in (:".str_replace(".","_",$field)."_param) ".$nullFilter." )")->setParameter(str_replace(".","_",$field)."_param", $filterAux);
-                }else{
-                    $qb->andWhere(" ( 1 = 2 ".$nullFilter." )");
+                if (count($filterAux) > 0) {
+                    $qb->andWhere(" ( " . $field . " in (:" . str_replace(".", "_", $field) . "_param) " . $nullFilter . " )")->setParameter(str_replace(".", "_", $field) . "_param", $filterAux);
+                } else {
+                    $qb->andWhere(" ( 1 = 2 " . $nullFilter . " )");
                 }
             }
         }
