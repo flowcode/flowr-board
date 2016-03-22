@@ -23,8 +23,6 @@
 				        /
 				        <a style="color: #CC3E32;text-decoration: none;" href="{{app.request.getSchemeAndHttpHost()}}{{ path('project_show', { 'id': project.id }) }}">{{ project|capitalize }}</a>
 			        {% endif %}
-			        /
-			        <a style="color: #CC3E32;text-decoration: none;" href="{{app.request.getSchemeAndHttpHost()}}{{ path('board_task_kanban', { 'id': task.board.id }) }}">{{ task.board|capitalize }}</a>
 					
 				</td>
 			</tr>

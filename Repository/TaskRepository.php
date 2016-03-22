@@ -162,7 +162,7 @@ class TaskRepository extends EntityRepository
         $qb = $this->createQueryBuilder("t");
         $qb->select("SUM(t.estimated)");
         $qb->join("t.projectIteration", "ti");
-        $qb->innerJoin('FlowerModelBundle:Board\History', "h", Join::WITH, "h.enitity_id = t.id");
+        $qb->leftJoin('FlowerModelBundle:Board\History', "h", Join::WITH, "h.enitity_id = t.id");
         $qb->where("ti.id = :project_iteration_id")->setParameter("project_iteration_id", $projectIterationId);
 
         $qb->andWhere("h.type = 'task'");
