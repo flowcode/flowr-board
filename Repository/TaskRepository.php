@@ -75,6 +75,10 @@ class TaskRepository extends EntityRepository
             $qb->andWhere("t.status = :status_id")->setParameter("status_id", $statusId);
         }
 
+        if (isset($filter['board_id'])) {
+            $qb->andWhere("t.board = :board_id")->setParameter("board_id", $filter['board_id']);
+        }
+
         if (isset($filter['project_id'])) {
             $qb->andWhere("t.project = :project_id")->setParameter("project_id", $filter['project_id']);
         }

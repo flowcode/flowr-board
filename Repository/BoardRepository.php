@@ -12,7 +12,28 @@ use Doctrine\ORM\EntityRepository;
  */
 class BoardRepository extends EntityRepository
 {
-	public function getCountTodo()
+
+    /**
+     * @param array $filter
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getAllByUserQB($userId = null, $filter = array())
+    {
+        $qb = $this->createQueryBuilder('b');
+        foreach ($filter as $field => $value) {
+            $qb->orWhere("b." . $field . " LIKE :" . $field . "_value")->setParameter($field . "_value", "%" . $value . "%");
+        }
+
+        if (!is_null($userId)) {
+            $qb->leftJoin("b.owner", "u");
+            $qb->where("u.id = :user_id")->setParameter("user_id", $userId);
+        }
+        $qb->orWhere("b.private = :private")->setParameter("private", false);
+
+        return $qb;
+    }
+
+    public function getCountTodo()
     {
         $qb = $this->createQueryBuilder("b");
         $qb->select("COUNT(b)");

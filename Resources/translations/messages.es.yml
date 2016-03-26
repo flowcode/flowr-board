@@ -30,6 +30,10 @@ activity.feed.task.create: "Creó la tarea <a href='%link%'>%task_name%</a>."
 activity.feed.task.update: "Editó información de la tarea <a href='%link%'>%task_name%</a>."
 activity.feed.task.delete: "Elimninó la tarea <a href='%link%'>%task_name%</a>."
 
+activity.feed.task_project.create: "Creó la tarea <a href='%link%'>%task_name%</a> del proyecto <a href='%project_link%'>%project_name%</a>."
+activity.feed.task_project.update: "Editó información de la tarea <a href='%link%'>%task_name%</a> del proyecto <a href='%project_link%'>%project_name%</a>."
+activity.feed.task_project.delete: "Elimninó la tarea <a href='%link%'>%task_name%</a> del proyecto <a href='%project_link%'>%project_name%</a>."
+
 activity.feed.campaignmail.create: "Creó la campaña <a href='%link%'>%campaignmail_name%</a>."
 activity.feed.campaignmail.update: "Editó información de la campaña <a href='%link%'>%campaignmail_name%</a>."
 activity.feed.campaignmail.delete: "Elimninó la campaña <a href='%link%'>%campaignmail_name%</a>."

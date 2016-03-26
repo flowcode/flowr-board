@@ -96,22 +96,37 @@ class HistoryService
             case History::TYPE_PROJECT:
                 $msgIn = "activity.feed.project." . $crudAction;
                 $link = $this->router->generate("project_show", array('id' => $entity->getId()));
-                $msgOut = $this->translator->trans($msgIn, array("%project_name%" => $entity->getName(),"%link%" => $link,));
+                $msgOut = $this->translator->trans($msgIn, array("%project_name%" => $entity->getName(), "%link%" => $link,));
                 break;
             case History::TYPE_ACCOUNT:
                 $msgIn = "activity.feed.account." . $crudAction;
                 $link = $this->router->generate("account_show", array('id' => $entity->getId()));
-                $msgOut = $this->translator->trans($msgIn, array("%account_name%" => $entity->getName(),"%link%" => $link,));
+                $msgOut = $this->translator->trans($msgIn, array("%account_name%" => $entity->getName(), "%link%" => $link,));
                 break;
             case History::TYPE_TASK:
-                $msgIn = "activity.feed.task." . $crudAction;
+
                 $link = $this->router->generate("task_show", array('id' => $entity->getId()));
-                $msgOut = $this->translator->trans($msgIn, array("%task_name%" => $entity->getName(),"%link%" => $link,));
+
+                if ($entity->getProject()) {
+                    $msgIn = "activity.feed.task_project." . $crudAction;
+                    $project_name = $entity->getProject()->getName();
+                    $project_link = $this->router->generate("project_show", array('id' => $entity->getProject()->getId()));
+                    $msgOut = $this->translator->trans($msgIn, array(
+                        "%task_name%" => $entity->getName(),
+                        "%project_name%" => $project_name,
+                        "%link%" => $link,
+                        "%project_link%" => $project_link,
+                    ));
+                } else {
+                    $msgIn = "activity.feed.task." . $crudAction;
+                    $msgOut = $this->translator->trans($msgIn, array("%task_name%" => $entity->getName(), "%link%" => $link,));
+                }
+
                 break;
             case History::TYPE_CALL_EVENT:
                 $msgIn = "activity.feed.callevent." . $crudAction;
                 $link = $this->router->generate("callevent_show", array('id' => $entity->getId()));
-                $msgOut = $this->translator->trans($msgIn, array("%callevent_subject%" => $entity->getSubject(),"%link%" => $link,));
+                $msgOut = $this->translator->trans($msgIn, array("%callevent_subject%" => $entity->getSubject(), "%link%" => $link,));
                 break;
             case History::TYPE_CAMPAIGN_MAIL:
                 $msgIn = "activity.feed.campaignmail." . $crudAction;

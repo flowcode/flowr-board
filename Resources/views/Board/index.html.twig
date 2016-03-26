@@ -24,21 +24,17 @@
                     <thead>
                     <tr>
                         <th scope="col">{{ 'Name' | trans({}, 'Board') }}</th>
-                        <th scope="col">{{ 'Status' | trans({}, 'Board') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for board in paginator %}
                         <tr>
-                            <td><a title="{{ board.description }}" class=""
-                                   href="{{ path('board_task_kanban', {"id": board.id}) }}">{{ board.name | capitalize }}</a>
+                            <td>
+                                <a title="{{ board.description }}" class=""
+                                   href="{{ path('board_task_kanban', {"id": board.id}) }}">
+                                    {{ board.name | capitalize }}
+                                </a>
                             </td>
-
-                            {% if board.status == 1 %}
-                                <td>{{ 'open' | trans({}, 'Board') | capitalize }}</td>
-                            {% else %}
-                                <td>{{ 'closed' | trans({}, 'Board')| capitalize }}</td>
-                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -2,6 +2,7 @@
 
 namespace Flower\BoardBundle\Controller;
 
+use Flower\ModelBundle\Entity\Board\TaskFilter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -28,7 +29,7 @@ class BoardController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $qb = $em->getRepository('FlowerModelBundle:Board\Board')->createQueryBuilder('b');
+        $qb = $em->getRepository('FlowerModelBundle:Board\Board')->getAllByUserQB($this->getUser()->getId());
         $paginator = $this->get('knp_paginator')->paginate($qb, $request->query->get('page', 1), 20);
         return array(
             'paginator' => $paginator,
@@ -71,6 +72,7 @@ class BoardController extends Controller
         return array(
             'board_opportunity' => null,
             'board_project' => null,
+            'filter' => $board->getTaskFilter(),
             'board_account' => null,
             'board' => $board,
         );
@@ -97,7 +99,6 @@ class BoardController extends Controller
             }
         }
     }
-
 
 
     /**
@@ -138,7 +139,20 @@ class BoardController extends Controller
         ));
         if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $board->setOwner($this->getUser());
             $em->persist($board);
+            $em->flush();
+
+            $taskFilter = new TaskFilter();
+            $taskFilter->setName("default");
+            $filter = "board_id=" . $board->getId();
+
+            $taskFilter->setFilter($filter);
+            $em->persist($taskFilter);
+            $em->flush();
+
+            $board->setTaskFilter($taskFilter);
             $em->flush();
 
             return $this->redirect($this->generateUrl('board_show', array('id' => $board->getId())));

@@ -40,13 +40,16 @@
     <script type="text/javascript">
         var appPath = "{{ path("dashboard") }}";
         var boardId = "{{ board.id }}";
+        var filterId = "{{ filter.id }}";
     </script>
 
     <script src="{{ asset('bundles/flowercore/js/plugins/events.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/flowercore/js/angular/sortable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/flowercore/js/angular/ngStorage.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/flowercore/js/angular/kanban/app-kanban.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('bundles/flowercore/js/angular/kanban/controller/taskCtrl.js') }}"
+    <script src="{{ asset('bundles/flowercore/js/angular/kanban/controller/taskListCtrl.js') }}"
+            type="text/javascript"></script>
+    <script src="{{ asset('bundles/flowercore/js/angular/kanban/controller/taskKanbanCtrl.js') }}"
             type="text/javascript"></script>
 
 {% endblock %}

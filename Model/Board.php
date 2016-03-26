@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Groups;
@@ -35,6 +36,12 @@ abstract class Board
     protected $name;
 
     /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
+     * @JoinColumn(name="user_id", referencedColumnName="id")
+     * */
+    protected $owner;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
@@ -46,6 +53,20 @@ abstract class Board
      * @OneToMany(targetEntity="Flower\ModelBundle\Entity\Board\Task", mappedBy="board")
      * */
     protected $tasks;
+
+    /**
+     * @OneToOne(targetEntity="Flower\ModelBundle\Entity\Board\TaskFilter")
+     * @JoinColumn(name="task_filter_id", referencedColumnName="id")
+     */
+    protected $taskFilter;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="private", type="boolean")
+     * @Groups({"search"})
+     */
+    protected $private;
 
     /**
      * @var boolean
@@ -69,6 +90,16 @@ abstract class Board
      * @ORM\Column(name="updated", type="datetime")
      */
     protected $updated;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+        $this->archived = false;
+        $this->private = false;
+    }
 
     /**
      * Get id
@@ -172,15 +203,6 @@ abstract class Board
         return $this->updated;
     }
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->tasks = new ArrayCollection();
-        $this->archived = 0;
-    }
-
 
     public function __toString()
     {
@@ -219,6 +241,53 @@ abstract class Board
         $this->archived = $archived;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTaskFilter()
+    {
+        return $this->taskFilter;
+    }
 
+    /**
+     * @param mixed $taskFilter
+     */
+    public function setTaskFilter($taskFilter)
+    {
+        $this->taskFilter = $taskFilter;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPrivate()
+    {
+        return $this->private;
+    }
+
+    /**
+     * @param boolean $private
+     */
+    public function setPrivate($private)
+    {
+        $this->private = $private;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param mixed $owner
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+    }
+    
 
 }
