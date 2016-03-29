@@ -1,0 +1,155 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}Task - {{ parent() }}{% endblock %}
+
+{% block app_menu %}
+    {{ include("FlowerBoardBundle::appnav.html.twig") }}
+{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>
+            <a href="{{ path('project_show',{id:taskFilter.projectIteration.project.id}) }}">
+                {{ taskFilter.projectIteration.project.name|title }}
+            </a>/
+            <a href="{{ path('project_iteration_show',{id:taskFilter.projectIteration.id}) }}">
+                {{ taskFilter.projectIteration.name|title }}
+            </a>
+        </h1>
+    </section>
+    <section class="content">
+        <div class="box" id="showTaks">
+            <div class="box-header">
+                <h3 class="box-title"></h3>
+                <div class="box-tools pull-right">
+                    {{ form_start(delete_form) }}
+                    {{ form_widget(delete_form) }}
+                    <div class="btn-group record_actions">
+                        <button class="btn btn-link  btn-sm" type="submit">{{ 'delete'|trans() }}</button>
+                        <a class="btn btn-link  btn-sm" onclick="showEdit(true)">
+                            {{ 'edit'|trans({}, 'TaskFilter') }}
+                        </a>
+                    </div>
+                    <input name="modal" type="hidden" value="0">
+                    {{ form_end(delete_form) }}
+                    <div id="delete_confirm" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h3>{{ 'Confirm delete'|trans({}, 'Task') }}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}
+                                        , {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
+                                    <p>{{ 'Do you want to proceed?'|trans({}, 'Task') }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Task') }}</button>
+                                    <button class="btn btn-default"
+                                            data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2">{{ 'Name'|trans }}</label>
+                            {{ taskFilter.name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">{{ 'Status'|trans({}, 'Task') }}</label>
+                            {{ taskFilter.filter|upper }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-2">{{ 'Created'|trans({}, 'Task') }}</label>
+                            {{ taskFilter.owner|date('fullDateTime'|trans) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+            </div>
+        </div>
+        <div class="box" id="editFormTask" style="display: none;">
+            <div class="box-header">
+                <div class="box-tools">
+                    <div class="btn-group record_actions">
+                        <a class="btn btn-link  btn-sm" onclick="showEdit(false)">
+                            {{ 'Cancel'|trans({}, 'Account') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+
+                {{ form_start(edit_form) }}
+                <div class="col-sm-6" style="margin-right: 50%;">
+                    {{ form_row(edit_form.name) }}
+                </div>
+                <div class="col-sm-6">
+                    {{ form_row(edit_form.filter) }}
+                </div>
+                <div class="col-sm-12">
+                    <p>
+                        <button class="btn btn-primary" type="submit">{{ 'Edit'|trans({}, 'TaskStatus') }}</button>
+                    </p>
+                </div>
+                {{ form_end(edit_form) }}
+            </div>
+            <div class="box-footer">
+                {{ form_start(delete_form) }}
+                {{ form_widget(delete_form) }}
+
+
+                <input name="modal" type="hidden" value="0">
+                {{ form_end(delete_form) }}
+
+                <div id="delete_confirm" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
+                                <h3>{{ 'Confirm delete'|trans({}, 'Task') }}</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}
+                                    , {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
+                                <p>{{ 'Do you want to proceed?'|trans({}, 'Task') }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Task') }}</button>
+                                <button class="btn btn-default"
+                                        data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function showEdit(show) {
+            if (show) {
+                $("#showTaks").hide();
+                $("#editFormTask").show();
+            } else {
+                $("#showTaks").show();
+                $("#editFormTask").hide();
+            }
+        }
+
+    </script>
+{% endblock %}

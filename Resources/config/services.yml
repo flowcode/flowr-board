@@ -5,6 +5,11 @@ services:
         arguments: ["@security.context"]
         tags:
             - { name: form.type, alias: task_type }
+    form.type.taskFilter:
+        class: Flower\BoardBundle\Form\Type\TaskFilterType
+        arguments: ["@security.context"]
+        tags:
+            - { name: form.type, alias: task_type }
 
     form.type.task_quick:
             class: Flower\BoardBundle\Form\Type\TaskQuickType
