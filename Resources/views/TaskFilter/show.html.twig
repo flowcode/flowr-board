@@ -59,20 +59,26 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-sm-2">{{ 'Name'|trans }}</label>
+                            <label class="col-sm-2">{{ 'Name'|trans({}, 'Task')  }}</label>
                             {{ taskFilter.name }}
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2">{{ 'Owner'|trans({}, 'Task') }}</label>
+                            {{ taskFilter.owner }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label class="col-sm-2">{{ 'Status'|trans({}, 'Task') }}</label>
                             {{ taskFilter.filter|upper }}
                         </div>
-                    </div>
-                    <div class="col-sm-6">
                         <div class="form-group">
                             <label class="col-sm-2">{{ 'Created'|trans({}, 'Task') }}</label>
-                            {{ taskFilter.owner|date('fullDateTime'|trans) }}
+                            {{ taskFilter.created|date('fullDateTime'|trans) }}
                         </div>
                     </div>
+                    
                 </div>
             </div>
             <div class="box-footer">
