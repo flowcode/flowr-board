@@ -27,5 +27,11 @@
             {% endif %}
         {% endif %}
 
+        <li {% if app_timelog is defined %}class="active"{% endif %}>
+            <a href="{{ path('timelog_report_index') }}">
+                {{ 'TimeLog' | trans({}, 'TimeLog') }}
+            </a>
+        </li>
+
     </ul>
 </section>

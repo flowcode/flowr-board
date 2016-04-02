@@ -3,6 +3,7 @@
 namespace Flower\BoardBundle\Controller;
 
 use DateTime;
+use DoctrineExtensions\Query\Mysql\Date;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,75 +17,51 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Report controller.
  *
- * @Route("/report")
+ * @Route("/timelog/report")
  */
 class ReportController extends Controller
 {
     /**
      * Lists all Report entities.
      *
-     * @Route("/", name="report_index")
+     * @Route("/", name="timelog_report_index")
      * @Method("GET")
      * @Template()
      */
     public function indexAction(Request $request)
     {
+        $todayFrom = new DateTime('first day of this month');
+        $todayTo = new DateTime();
+
+        /* dates */
+        $fromDate = new DateTime($request->get("from_date", $todayFrom->format('Y-m-d')));
+        $toDate = new DateTime($request->get("to_date", $todayTo->format('Y-m-d')));
+
+        /* filters */
+        $filters = array(
+            "project_id" => $request->get("project_id"),
+            "account_id" => $request->get("account_id"),
+            "from_date" => $fromDate,
+            "to_date" => $toDate,
+        );
+
         $em = $this->getDoctrine()->getManager();
-        $conn = $this->get('database_connection');
-        $translator = $this->get('translator');
-        $dateformat = $translator->trans('fullDateTime');
-        $addGroupBy = null;
 
-        /* Addons, agregados para filtrado */
-        $groupBy = ["account", "project", "board"];
+        $totalHours = $em->getRepository('FlowerModelBundle:Board\TimeLog')->getAllSpentFilter($filters, $fromDate, $toDate);
 
-        /* Select formater */
-        $formaterElem = $request->get("addGroupBy");
+        $qb = $em->getRepository('FlowerModelBundle:Board\TimeLog')->getAllQB($filters, $fromDate, $toDate);
 
-        /* Date Filter */
-        $startDateFilter = $request->get("startDateFilter");
-        $endDateFilter = $request->get("endDateFilter");
-        $dates = $this->get('board.service.report')->dateFilter($dateformat, $startDateFilter, $endDateFilter);
+        $paginator = $this->get('knp_paginator')->paginate($qb, $request->get('page', 1), 20);
 
-        /* SQL Builder */
-        $value = $this->get('board.service.report')->getSQLQuery($formaterElem, $dates);
-        $tableHeader = $value["tableHeader"];
-        $sql = $value["sql"];
-
-        $results = $conn->fetchAll($sql);
-
-        $totalHours = array_sum(array_column($results, 'time_log_hours'));
+        $projects = $em->getRepository('FlowerModelBundle:Project\Project')->findAllActive();
+        $accounts = $em->getRepository('FlowerModelBundle:Clients\Account')->findAll();
 
         return array(
-            'paginator' => $results,
+            'paginator' => $paginator,
+            'filters' => $filters,
             'totalHours' => $totalHours,
-            'addGroupBy' => $addGroupBy,
-            'groupBy' => $groupBy,
-            'tableHeader' => $tableHeader,
-            'startDateFilter' => isset($filters['startDateFilter']) ? $filters['startDateFilter']["value"] : null,
-            'endDateFilter' => isset($filters['endDateFilter']) ? $filters['endDateFilter']["value"] : null,
+            'projects' => $projects,
+            'accounts' => $accounts,
         );
-    }
-
-    private function addFilter($qb, $filter, $field)
-    {
-        if ($filter && count($filter) > 0) {
-            if (implode(",", $filter) != "") {
-                $filterAux = array();
-                $nullFilter = "";
-                foreach ($filter as $element) {
-                    if ($element == "-1") {
-                        $nullFilter = " OR  (" . $field . " is NULL)";
-                    } else {
-                        $filterAux[] = $element;
-                    }
-                }
-                if (count($filterAux) > 0) {
-                    $qb->andWhere(" ( " . $field . " in (:" . str_replace(".", "_", $field) . "_param) " . $nullFilter . " )")->setParameter(str_replace(".", "_", $field) . "_param", $filterAux);
-                } else {
-                    $qb->andWhere(" ( 1 = 2 " . $nullFilter . " )");
-                }
-            }
-        }
     }
 }

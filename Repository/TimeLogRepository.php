@@ -4,6 +4,7 @@ namespace Flower\BoardBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Flower\ModelBundle\Entity\Board\Task;
+
 /**
  * TimeLogRepository
  *
@@ -16,18 +17,18 @@ class TimeLogRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder("tl");
         $qb->select("SUM(tl.hours)");
-                
+
         $qb->andWhere("tl.task = :task")->setParameter("task", $task);
-        
+
         return $qb->getQuery()->getSingleScalarResult();
     }
-    
+
     /* Returns sum of all hours */
     public function getAllSpent()
     {
         $qb = $this->createQueryBuilder("tl");
         $qb->select("SUM(tl.hours)");
-        
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 
@@ -36,13 +37,62 @@ class TimeLogRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder("tl");
         $qb->select("SUM(tl.hours)");
-        if($task){
-        	$qb->where("tl.task = :task")->setParameter("task", $task);
+        if ($task) {
+            $qb->where("tl.task = :task")->setParameter("task", $task);
         }
-        if($user){
-        	$qb->andWhere("tl.user = :user")->setParameter("user", $user);
+        if ($user) {
+            $qb->andWhere("tl.user = :user")->setParameter("user", $user);
         }
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /* generic spent */
+    public function getAllQB($filters = array(), \DateTime $fromDate = null, \DateTime $toDate = null)
+    {
+        $qb = $this->createQueryBuilder("tl");
+
+        $qb->join("tl.task", "task");
+        $qb->join("tl.user", "u");
+        $qb->leftJoin("task.account", "account");
+        $qb->leftJoin("task.tracker", "tracker");
+
+        if (isset($filters['account_id']) && !is_null($filters['account_id'])) {
+            $qb->leftJoin("task.project", "project");
+            $qb->leftJoin("project.account", "project_account");
+            $qb->andWhere("(account.id = :account_id OR project_account.id = :project_account_id)")
+                ->setParameter("account_id", $filters['account_id'])
+                ->setParameter("project_account_id", $filters['account_id']);
+        }
+
+        if (isset($filters['project_id']) && !is_null($filters['project_id'])) {
+            $qb->leftJoin("task.project", "project");
+            $qb->andWhere("project.id = :project_id")->setParameter("project_id", $filters['project_id']);
+        }
+
+        $qb->andWhere("tl.spentOn BETWEEN :from_date AND :to_date")
+            ->setParameter("from_date", $fromDate)
+            ->setParameter("to_date", $toDate);
+
+        return $qb;
+    }
+
+    public function getAllSpentFilter($filters = array(), \DateTime $fromDate = null, \DateTime $toDate = null)
+    {
+        $qb = $this->getAllQB($filters, $fromDate, $toDate);
+
+        $qb->select("SUM(tl.hours)");
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getAllPaged($filters = array(), \DateTime $fromDate = null, \DateTime $toDate = null, $max = 20, $first = 0)
+    {
+        $qb = $this->getAllQB($filters, $fromDate, $toDate);
+
+        $qb->setMaxResults($max);
+        $qb->setFirstResult($first);
+
+        return $qb->getQuery()->getResult();
     }
 }
