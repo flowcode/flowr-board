@@ -114,6 +114,7 @@
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">{{ 'Description'|trans({}, 'TimeLog') }}</th>
+                        <th scope="col">{{ 'Task'|trans({}, 'Task') }}</th>
                         <th scope="col">{{ 'date'|trans }}</th>
                         <th scope="col">{{ 'Hours'|trans({}, 'TimeLog') }}</th>
                         <th scope="col">{{ 'Tracker'|trans({}, 'Tracker') }}</th>
@@ -129,6 +130,7 @@
                                 </a>
                             </td>
                             <td>{{ timelog.description }}</td>
+                            <td>#{{ timelog.task.id }} - {{ timelog.task }}</td>
                             <td>{{ timelog.spentOn|date }}</td>
                             <td>{{ timelog.hours }}</td>
                             <td>{{ timelog.task.tracker }}</td>

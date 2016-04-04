@@ -27,6 +27,7 @@ class ReportService implements ContainerAwareInterface
                 array(
                     "Id",
                     "Descripcion",
+                    "Tarea",
                     "Fecha",
                     "Horas",
                     "Actividad",
@@ -45,6 +46,7 @@ class ReportService implements ContainerAwareInterface
                     array(
                         $timelog->getId() ?: " ",
                         $timelog->getDescription() ?: " ",
+                        $timelog->getTask()->getName() ?: " ",
                         $timelog->getSpentOn() ?: " ",
                         $timelog->getHours() ?: " ",
                         $timelog->getTask()->getTracker()->getName() ?: " ",
