@@ -198,9 +198,9 @@ class TimeLogController extends Controller
     }
 
     /**
-     * @param string $name  session name
+     * @param string $name session name
      * @param string $field field name
-     * @param string $type  sort type ("ASC"/"DESC")
+     * @param string $type sort type ("ASC"/"DESC")
      */
     protected function setOrder($name, $field, $type = 'ASC')
     {
@@ -220,7 +220,7 @@ class TimeLogController extends Controller
 
     /**
      * @param QueryBuilder $qb
-     * @param string       $name
+     * @param string $name
      */
     protected function addQueryBuilderSort(QueryBuilder $qb, $name)
     {
@@ -251,17 +251,37 @@ class TimeLogController extends Controller
     /**
      * Create Delete form
      *
-     * @param integer                       $id
-     * @param string                        $route
+     * @param integer $id
+     * @param string $route
      * @return Form
      */
     protected function createDeleteForm($id, $route)
     {
         return $this->createFormBuilder(null, array('attr' => array('id' => 'delete')))
-                        ->setAction($this->generateUrl($route, array('id' => $id)))
-                        ->setMethod('DELETE')
-                        ->getForm()
-        ;
+            ->setAction($this->generateUrl($route, array('id' => $id)))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+
+    /**
+     *
+     * @Route("/export", name="timelog_export")
+     * @Method("GET")
+     */
+    public function exportViewAction(Request $request)
+    {
+        $filters = $request->getSession()->get("timelog_report_filters");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $qb = $em->getRepository('FlowerModelBundle:Board\TimeLog')->getAllQB($filters, $filters['from_date'], $filters['to_date']);
+        $timelogs = $qb->getQuery()->getResult();
+
+        $data = $this->get("board.service.report")->getDataExport($timelogs);
+        $this->get("client.service.excelexport")->exportData($data, "Timelogs", "Registros de tiempos");
+
+        die();
+        return $this->redirectToRoute("timelog_report_index");
     }
 
 }

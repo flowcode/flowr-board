@@ -45,6 +45,8 @@ class ReportController extends Controller
             "to_date" => $toDate,
         );
 
+        $request->getSession()->set("timelog_report_filters", $filters);
+
         $em = $this->getDoctrine()->getManager();
 
         $totalHours = $em->getRepository('FlowerModelBundle:Board\TimeLog')->getAllSpentFilter($filters, $fromDate, $toDate);
