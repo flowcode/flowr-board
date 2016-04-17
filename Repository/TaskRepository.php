@@ -178,5 +178,13 @@ class TaskRepository extends EntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-
+    public function getTaskWithSpent($projectIteration)
+    {
+        $qb = $this->createQueryBuilder("t");
+        $qb->select("t as task, SUM(tl.hours) as spent");
+        $qb->leftJoin('t.timeLogs', "tl");
+        $qb->where("t.projectIteration = :projectIteration")->setParameter("projectIteration", $projectIteration);
+        $qb->groupBy("t.id");
+        return $qb->getQuery()->getResult();
+    }
 }
