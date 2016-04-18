@@ -48,6 +48,8 @@ class TaskType extends AbstractType
             ))
             ->add('status', null, array('required' => true))
             ->add('tracker')
+            ->add('project')
+            ->add('projectIteration')
             ->add('description', 'ckeditor', array(
                 'required' => false,
                 'config_name' => 'minimal'
