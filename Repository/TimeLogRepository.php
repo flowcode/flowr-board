@@ -70,7 +70,11 @@ class TimeLogRepository extends EntityRepository
             $qb->andWhere("project.id = :project_id")->setParameter("project_id", $filters['project_id']);
         }
 
-        $qb->andWhere("tl.spentOn BETWEEN :from_date AND :to_date")
+        if (isset($filters['user_id']) && !is_null($filters['user_id'])) {
+            $qb->andWhere("u.id = :user_id")->setParameter("user_id", $filters['user_id']);
+        }
+
+        $qb->andWhere("(tl.spentOn >= :from_date AND tl.spentOn <= :to_date)")
             ->setParameter("from_date", $fromDate)
             ->setParameter("to_date", $toDate);
 

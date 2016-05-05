@@ -59,6 +59,23 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label" for="statusFilter">
+                                            {{ 'User' | trans }}
+                                        </label>
+                                        <div class="col-sm-8" class="input-group">
+                                            <select name="user_id" class="form-control" multiple>
+                                                <option>Usuario</option>
+                                                {% for user in users %}
+                                                    <option value="{{ user.id }}"
+                                                            {% if filters.user_id == user.id %}selected{% endif %}>
+                                                        {{ user.getHappyName() }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">

@@ -34,13 +34,14 @@ class ReportController extends Controller
         $todayTo = new DateTime();
 
         /* dates */
-        $fromDate = new DateTime($request->get("from_date", $todayFrom->format('Y-m-d')));
-        $toDate = new DateTime($request->get("to_date", $todayTo->format('Y-m-d')));
+        $fromDate = new DateTime($request->get("from_date", $todayFrom->format('Y-m-d')) . " 00:00");
+        $toDate = new DateTime($request->get("to_date", $todayTo->format('Y-m-d')). " 23:59:59");
 
         /* filters */
         $filters = array(
             "project_id" => $request->get("project_id"),
             "account_id" => $request->get("account_id"),
+            "user_id" => $request->get("user_id"),
             "from_date" => $fromDate,
             "to_date" => $toDate,
         );
@@ -57,6 +58,7 @@ class ReportController extends Controller
 
         $projects = $em->getRepository('FlowerModelBundle:Project\Project')->findAllActive();
         $accounts = $em->getRepository('FlowerModelBundle:Clients\Account')->findAll();
+        $users = $em->getRepository('FlowerModelBundle:User\User')->findAll();
 
         return array(
             'paginator' => $paginator,
@@ -64,6 +66,7 @@ class ReportController extends Controller
             'totalHours' => $totalHours,
             'projects' => $projects,
             'accounts' => $accounts,
+            'users' => $users,
         );
     }
 }
