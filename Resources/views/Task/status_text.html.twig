@@ -1,0 +1,23 @@
+{% set text_class = '' %}
+{% if status == 'closed' %}
+
+    {% set text_class = 'text-mutted' %}
+
+{% elseif status == 'done' %}
+
+    {% set text_class = 'text-success' %}
+
+{% elseif status == 'doing' %}
+
+    {% set text_class = 'text-warning' %}
+
+{% elseif status == 'todo' %}
+
+    {% set text_class = 'text-aqua' %}
+
+{% endif %}
+<span class="{{ text_class }}">
+    <small>
+        {{ task.task.status | trans({},"TaskStatus") }}
+    </small>
+</span>

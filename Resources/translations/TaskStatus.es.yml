@@ -18,3 +18,8 @@ TaskStatus: Estado
 edit: editar
 show: ver
 'this procedure is irreversible': 'esta accion será irreversible'
+
+done: terminado
+pending: pendiente
+doing: en proceso
+todo: pendiente

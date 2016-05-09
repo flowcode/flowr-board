@@ -150,6 +150,13 @@ abstract class Task
     protected $dueDate;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="client_viewable", type="boolean")
+     */
+    protected $clientViewable;
+
+    /**
      * @var DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created", type="datetime")
@@ -171,6 +178,7 @@ abstract class Task
         $this->position = 0;
         $this->attachments = new ArrayCollection();
         $this->timeLogs = new ArrayCollection();
+        $this->clientViewable = true;
     }
 
     /**
@@ -616,5 +624,21 @@ abstract class Task
         $this->board = $board;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isClientViewable()
+    {
+        return $this->clientViewable;
+    }
+
+    /**
+     * @param boolean $clientViewable
+     */
+    public function setClientViewable($clientViewable)
+    {
+        $this->clientViewable = $clientViewable;
+    }
+    
 
 }
