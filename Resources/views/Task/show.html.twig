@@ -8,12 +8,25 @@
 
 {% block body %}
     <section class="content-header">
-        <h1>#{{ task.id }} {{ task.name|title }}</h1>
+        <h1>
+                {% if task.project is defined  %}
+                    <a href="{{ path('project_show', {'id':task.projectIteration.id}) }}" >
+                        {{task.project}}
+                    </a>
+                {% endif %}
+                {% if task.projectIteration is defined  %}
+                    /
+                    <a href="{{ path('project_iteration_default_view', {'id':task.projectIteration.id}) }}" >
+                        {{task.projectIteration}}
+                    </a>
+                {% endif %}
+        
+        </h1>
     </section>
     <section class="content">
         <div class="box" id="showTaks">
             <div class="box-header">
-                <h3 class="box-title"></h3>
+                <h3 class="box-title">#{{ task.id }} {{ task.name|title }}</h3>
                 <div class="box-tools pull-right">
                     {{ form_start(delete_form) }}
                     {{ form_widget(delete_form) }}
@@ -59,22 +72,27 @@
                 </p>
                 <div class="row">
                     <div class="col-sm-6">
+
                         <div class="form-group">
-                            <label class="col-sm-2">{{ 'Assignee'|trans }}</label>
+                            <label class="col-sm-3">{{ 'Tipo'|trans }}</label>
+                            {{ task.type }}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3">{{ 'Assignee'|trans }}</label>
                             {{ task.assignee }}
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2">{{ 'Status'|trans({}, 'Task') }}</label>
+                            <label class="col-sm-3">{{ 'Status'|trans({}, 'Task') }}</label>
                             {{ task.status|upper }}
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-sm-2">{{ 'Created'|trans({}, 'Task') }}</label>
+                            <label class="col-sm-3">{{ 'Created'|trans({}, 'Task') }}</label>
                             {{ task.created|date('fullDateTime'|trans) }}
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2">{{ 'Duedate'|trans({}, 'Task') }}</label>
+                            <label class="col-sm-3">{{ 'Duedate'|trans({}, 'Task') }}</label>
                             {{ task.dueDate|date('fullDateTime'|trans) }}
                         </div>
                     </div>
