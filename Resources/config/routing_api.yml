@@ -13,3 +13,7 @@ flower_board_api_getone:
 flower_board_api_getall:
     path:     /
     defaults: { _controller: FlowerBoardBundle:Api\Board:getAll }
+
+flower_tast_status_api_getall:
+    path:     /taskstatus/getall
+    defaults: { _controller: FlowerBoardBundle:Api\TaskStatus:getAll }
