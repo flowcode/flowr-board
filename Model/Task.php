@@ -23,7 +23,7 @@ abstract class Task
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"kanban","search","full"})
+     * @Groups({"kanban","search","full", "api"})
      */
     protected $id;
 
@@ -31,7 +31,7 @@ abstract class Task
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @Groups({"kanban","search","full"})
+     * @Groups({"kanban","search","full", "api"})
      */
     protected $name;
 
@@ -52,7 +52,7 @@ abstract class Task
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"kanban","search","full"})
+     * @Groups({"kanban","search","full", "api"})
      */
     protected $description;
 
@@ -60,7 +60,7 @@ abstract class Task
      * @var float
      *
      * @ORM\Column(name="estimated_hours", type="float", nullable=true)
-     * @Groups({"kanban","search","full"})
+     * @Groups({"kanban","search","full", "api"})
      */
     protected $estimated;
 
@@ -111,7 +111,7 @@ abstract class Task
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Board\TaskStatus")
      * @JoinColumn(name="status_id", referencedColumnName="id")
-     * @Groups({"kanban","search","full"})
+     * @Groups({"kanban","search","full", "api"})
      * */
     protected $status;
 
@@ -145,7 +145,7 @@ abstract class Task
      * @var DateTime
      *
      * @ORM\Column(name="dueDate", type="datetime", nullable=true)
-     * @Groups({"kanban","search", "full"})
+     * @Groups({"kanban","search", "full", "api"})
      */
     protected $dueDate;
 
